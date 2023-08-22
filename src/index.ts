@@ -1,3 +1,4 @@
+export { default as convertUploadFileToBase64 } from './convert-upload-file-to-base64';
 export { default as downloadTextFile } from './download-text-file';
 export { default as getBrowserCompatibility } from './get-browser-compatibility';
 export type { SysInterface } from './get-browser-compatibility';
