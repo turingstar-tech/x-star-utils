@@ -1,4 +1,4 @@
-# getBrowserCompatibility
+# isBrowserCompatibility
 
 主流浏览器兼容检测函数
 
@@ -9,10 +9,23 @@
   ie?: string;
   firefox?: string;
   chrome?: string;
+  fxios?: string;
+  crios?: string;
   opera?: string;
   safari?: string;
  * @returns 浏览器是否兼容
  */
+
+ 默认版本检测
+ minBrowserVersion: SysInterface = {
+  ie: '9999.0',
+  firefox: '80.0',
+  chrome: '88.0',
+  fxios: '80.0',
+  crios: '88.0',
+  opera: '80.0',
+  safari: '14.1',
+ }
 ```
 
 ```jsx
