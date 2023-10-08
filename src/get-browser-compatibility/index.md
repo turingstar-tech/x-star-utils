@@ -16,14 +16,16 @@
 ```
 
 ```jsx
-import { getBrowserCompatibility } from 'x-star-utils';
+import { isBrowserCompatibility } from 'x-star-utils';
 export default () => {
   return (
     <>
-      {getBrowserCompatibility({
+      {isBrowserCompatibility({
         ie: '9999.0',
         firefox: '80.0',
         chrome: '88.0',
+        crios: '88.0',
+        fxios: '80.0',
         opera: '80.0',
         safari: '14.1',
       }) ? (
