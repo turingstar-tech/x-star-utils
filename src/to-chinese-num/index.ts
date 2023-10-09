@@ -4,7 +4,7 @@
  * @param originNum
  * @returns
  */
-const toChinesNum = (originNum: number | string) => {
+const toChineseNum = (originNum: number | string) => {
   let num = originNum;
   const changeNum = [
     '零',
@@ -39,4 +39,4 @@ const toChinesNum = (originNum: number | string) => {
   if (noWan.toString().length < 4) noWan = '0' + noWan;
   return overWan ? getWan(overWan) + '万' + getWan(noWan) : getWan(num);
 };
-export default toChinesNum;
+export default toChineseNum;
