@@ -2,6 +2,7 @@ export { default as convertUploadFileToBase64 } from './convert-upload-file-to-b
 export { default as downloadFileFromBase64 } from './download-file-from-base64';
 export { default as downloadTextFile } from './download-text-file';
 export { default as formatDuration } from './format-duration';
+export { default as getDescription } from './get-description';
 export { default as getTransResult } from './get-trans-result';
 export { default as isBrowserCompatibility } from './is-browser-compatibility';
 export type { SysInterface } from './is-browser-compatibility';
