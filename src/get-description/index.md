@@ -12,15 +12,18 @@
 ```
 
 ```jsx
-import { useState } from 'react';
 import { getDescription } from 'x-star-utils';
 export default () => {
-  const [lang, setLang] = useState('zh');
-
   return (
     <div>
-      <span>{getDescription(lang, '赛制')}</span>
-      <span>{'OI赛制'}</span>
+      <div>
+        <span>{getDescription('zh', '赛制')}</span>
+        <span>{'OI赛制'}</span>
+      </div>
+      <div>
+        <span>{getDescription('en', 'Format')}</span>
+        <span>{'OI'}</span>
+      </div>
     </div>
   );
 };
