@@ -5,6 +5,6 @@
  * @returns string
  */
 const getDescription = (lang: 'zh' | 'en', text: string | undefined) => {
-  return text + (lang === 'zh' ? '：' : ':');
+  return text + (lang === 'zh' ? '：' : ': ');
 };
 export default getDescription;
