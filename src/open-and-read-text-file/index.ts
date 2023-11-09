@@ -15,14 +15,12 @@ const openAndReadTextFile = (): Promise<string> => {
     fileInput.onchange = () => {
       const file = fileInput.files ? fileInput.files[0] : null;
       const reader = new FileReader();
-
+      reader.onerror = (error) => {
+        reject(error); // 读取文件失败，返回错误信息
+      };
       reader.onload = () => {
         const content = reader.result as string;
         resolve(content); // 成功读取文件，返回文件内容
-      };
-
-      reader.onerror = () => {
-        reject(reader.error); // 读取文件失败，返回错误信息
       };
 
       if (file) {
