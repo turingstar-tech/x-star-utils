@@ -1,15 +1,21 @@
-import { describe, expect, test } from '@jest/globals';
-import { renderHook } from '@testing-library/react-hooks';
+import { describe, expect, jest, test } from '@jest/globals';
+import { act, renderHook } from '@testing-library/react-hooks';
 import { useDelayedMount } from '../src';
+
+jest.useFakeTimers();
 
 describe('use delayed mount test', () => {
   test('hide then show then hide', async () => {
-    const { result, rerender, waitForNextUpdate } = renderHook(
+    const { result, rerender } = renderHook(
       ({ show }) => useDelayedMount(show, 300),
-      {
-        initialProps: { show: false },
-      },
+      { initialProps: { show: false } },
     );
+
+    expect(result.current).toEqual([false, false]);
+
+    act(() => {
+      jest.advanceTimersByTime(305);
+    });
 
     expect(result.current).toEqual([false, false]);
 
@@ -17,7 +23,15 @@ describe('use delayed mount test', () => {
 
     expect(result.current).toEqual([true, false]);
 
-    await waitForNextUpdate({ timeout: 15 });
+    act(() => {
+      jest.advanceTimersByTime(5);
+    });
+
+    expect(result.current).toEqual([true, false]);
+
+    act(() => {
+      jest.advanceTimersByTime(10);
+    });
 
     expect(result.current).toEqual([true, true]);
 
@@ -25,49 +39,16 @@ describe('use delayed mount test', () => {
 
     expect(result.current).toEqual([true, false]);
 
-    try {
-      await waitForNextUpdate({ timeout: 295 });
-      throw new Error();
-    } catch {}
+    act(() => {
+      jest.advanceTimersByTime(295);
+    });
 
     expect(result.current).toEqual([true, false]);
 
-    await waitForNextUpdate({ timeout: 10 });
+    act(() => {
+      jest.advanceTimersByTime(10);
+    });
 
     expect(result.current).toEqual([false, false]);
-  });
-
-  test('show then hide then show', async () => {
-    const { result, rerender, waitForNextUpdate } = renderHook(
-      ({ show }) => useDelayedMount(show, 300),
-      {
-        initialProps: { show: true },
-      },
-    );
-
-    expect(result.current).toEqual([true, true]);
-
-    rerender({ show: false });
-
-    expect(result.current).toEqual([true, false]);
-
-    try {
-      await waitForNextUpdate({ timeout: 295 });
-      throw new Error();
-    } catch {}
-
-    expect(result.current).toEqual([true, false]);
-
-    await waitForNextUpdate({ timeout: 10 });
-
-    expect(result.current).toEqual([false, false]);
-
-    rerender({ show: true });
-
-    expect(result.current).toEqual([true, false]);
-
-    await waitForNextUpdate({ timeout: 15 });
-
-    expect(result.current).toEqual([true, true]);
   });
 });

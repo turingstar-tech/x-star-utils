@@ -40,7 +40,7 @@ const compareVersion = (version1: string, version2: string): boolean => {
   let result = true;
   ArrTemp.every((item, index) => {
     const v1 = versionArr1[index] || 0;
-    const v2 = versionArr2[index] || 0;
+    const v2 = versionArr2[index];
     if (v1 !== v2) {
       result = v1 >= v2;
     }
@@ -66,11 +66,12 @@ const judgeSystem = (ua: string): ISystem => {
   let browser = '';
   let version = '';
   Object.keys(systemMatch).every((item) => {
-    if (ua.match(systemMatch[item as keyof ISystemReg])) {
+    const userMatch = ua.match(systemMatch[item as keyof ISystemReg]);
+    if (userMatch) {
       browser = item;
-      version = ua.match(systemMatch[item as keyof ISystemReg])?.[1] || '';
+      version = userMatch[1];
     }
-    return !ua.match(systemMatch[item as keyof ISystemReg]);
+    return !userMatch;
   });
 
   return {

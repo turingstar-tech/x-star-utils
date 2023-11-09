@@ -20,23 +20,33 @@ const toChineseNum = (originNum: number | string) => {
   ]; //changeNum[0] = "零"
   const unit = ['', '十', '百', '千', '万'];
   if (typeof num === 'string') num = parseInt(num);
+
+  if (num === 0) {
+    return '零';
+  } else if (num > 99999) {
+    throw new Error('只支持十万以下的数字转换');
+  }
+
   const getWan = (temp: string | number) => {
     const strArr = temp.toString().split('').reverse();
     let newNum = '';
     for (let i = 0; i < strArr.length; i++) {
-      newNum =
-        (i === 0 && strArr[i] === '0'
-          ? ''
-          : i > 0 && strArr[i] === '0' && strArr[i - 1] === '0'
-          ? ''
-          : changeNum[strArr[i] as unknown as number] +
-            (strArr[i] === '0' ? unit[0] : unit[i])) + newNum;
+      if (strArr[i] === '0') {
+        if (i > 0 && strArr[i - 1] !== '0') {
+          newNum = changeNum[strArr[i] as unknown as number] + newNum;
+        }
+      } else {
+        newNum = changeNum[strArr[i] as unknown as number] + unit[i] + newNum;
+      }
     }
     return newNum;
   };
-  const overWan = Math.floor(num / 10000);
-  let noWan = (num % 10000).toString();
-  if (noWan.toString().length < 4) noWan = '0' + noWan;
-  return overWan ? getWan(overWan) + '万' + getWan(noWan) : getWan(num);
+
+  if (num >= 10 && num < 20) {
+    return '十' + getWan(num % 10);
+  } else {
+    return getWan(num);
+  }
 };
+
 export default toChineseNum;
