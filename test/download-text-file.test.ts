@@ -8,8 +8,6 @@ describe('download text file test', () => {
     URL.createObjectURL = jest.fn(() => 'mock-url');
     // 创建模拟的 DOM 方法
     const mockLinkClick = jest.fn();
-    const mockAppendChild = jest.fn();
-    const mockRemoveChild = jest.fn();
     document.createElement = jest.fn(
       () =>
         ({
@@ -19,8 +17,8 @@ describe('download text file test', () => {
           style: { display: 'none' },
         } as any),
     );
-    document.body.appendChild = mockAppendChild as any;
-    document.body.removeChild = mockRemoveChild as any;
+    document.body.appendChild = jest.fn() as any;
+    document.body.removeChild = jest.fn() as any;
     downloadTextFile(mockContent, mockFilename);
     // 验证 document.createElement 被调用
     expect(document.createElement).toHaveBeenCalledTimes(1);
@@ -30,7 +28,7 @@ describe('download text file test', () => {
     expect(URL.createObjectURL).toHaveBeenCalledWith(expect.any(Blob));
     // 验证模拟的 DOM 方法被调用
     expect(mockLinkClick).toHaveBeenCalledTimes(1);
-    expect(mockAppendChild).toHaveBeenCalledTimes(1);
-    expect(mockRemoveChild).toHaveBeenCalledTimes(1);
+    expect(document.body.appendChild).toHaveBeenCalledTimes(1);
+    expect(document.body.removeChild).toHaveBeenCalledTimes(1);
   });
 });

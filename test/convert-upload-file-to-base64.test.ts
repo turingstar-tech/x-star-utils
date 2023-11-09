@@ -1,4 +1,4 @@
-import { describe, expect, jest, test } from '@jest/globals';
+import { describe, expect, test } from '@jest/globals';
 import { convertUploadFileToBase64 } from '../src';
 describe('convert-upload-file-to-base64 test', () => {
   test('success test', async () => {
@@ -13,11 +13,9 @@ describe('convert-upload-file-to-base64 test', () => {
 
   test('error test', async () => {
     const file = new File(['test'], 'test.txt', { type: 'text/plain' });
-    jest
-      .spyOn(FileReader.prototype, 'readAsDataURL')
-      .mockImplementation(function (this: FileReader) {
-        this.onerror?.(new Error('File Reading error') as any);
-      });
+    FileReader.prototype.readAsDataURL = function () {
+      this.onerror?.(new Error('File Reading error'));
+    };
     await expect(convertUploadFileToBase64(file)).rejects.toThrowError(
       'File Reading error',
     );

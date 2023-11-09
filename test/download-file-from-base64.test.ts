@@ -10,8 +10,6 @@ describe('download file from base64 test', () => {
 
     // 创建模拟的 DOM 方法
     const mockLinkClick = jest.fn();
-    const mockAppendChild = jest.fn();
-    const mockRemoveChild = jest.fn();
     document.createElement = jest.fn(
       () =>
         ({
@@ -20,8 +18,8 @@ describe('download file from base64 test', () => {
           click: mockLinkClick,
         } as any),
     );
-    document.body.appendChild = mockAppendChild as any;
-    document.body.removeChild = mockRemoveChild as any;
+    document.body.appendChild = jest.fn() as any;
+    document.body.removeChild = jest.fn() as any;
 
     // 执行被测试函数
     downloadFileFromBase64(base64String, fileName);
@@ -36,7 +34,7 @@ describe('download file from base64 test', () => {
 
     // 验证模拟的 DOM 方法被调用
     expect(mockLinkClick).toHaveBeenCalledTimes(1);
-    expect(mockAppendChild).toHaveBeenCalledTimes(1);
-    expect(mockRemoveChild).toHaveBeenCalledTimes(1);
+    expect(document.body.appendChild).toHaveBeenCalledTimes(1);
+    expect(document.body.removeChild).toHaveBeenCalledTimes(1);
   });
 });
