@@ -3,6 +3,7 @@
   "version": "0.0.7",
   "description": "A react utils library developed by turingstar",
   "license": "MIT",
+  "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
