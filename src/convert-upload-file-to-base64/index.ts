@@ -6,6 +6,9 @@
 function convertUploadFileToBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
+    reader.onerror = (error) => {
+      reject(error);
+    };
     reader.readAsDataURL(file);
     reader.onload = (event) => {
       const base64String = event?.target?.result;
@@ -13,7 +16,6 @@ function convertUploadFileToBase64(file: File): Promise<string> {
       const base64 = String(base64String).replace(/^data:(.*;base64,)?/, '');
       resolve(base64);
     };
-    reader.onerror = (error) => reject(error);
   });
 }
 export default convertUploadFileToBase64;
