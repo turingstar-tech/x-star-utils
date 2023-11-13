@@ -3,11 +3,12 @@
   "version": "0.0.8",
   "description": "A react utils library developed by turingstar",
   "license": "MIT",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "types": "es/index.d.ts",
   "files": [
-    "dist"
+    "es",
+    "lib"
   ],
   "scripts": {
     "build": "father build",
