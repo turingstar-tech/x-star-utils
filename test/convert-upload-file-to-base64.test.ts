@@ -14,7 +14,7 @@ describe('convert-upload-file-to-base64 test', () => {
   test('error test', async () => {
     const file = new File(['test'], 'test.txt', { type: 'text/plain' });
     FileReader.prototype.readAsDataURL = function () {
-      this.onerror?.(new Error('File Reading error'));
+      this.onerror?.(new Error('File Reading error') as any);
     };
     await expect(convertUploadFileToBase64(file)).rejects.toThrowError(
       'File Reading error',

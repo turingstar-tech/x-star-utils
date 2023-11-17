@@ -68,7 +68,7 @@ describe('open and read text file test', () => {
       } as any;
     };
     FileReader.prototype.readAsText = function () {
-      this.onerror?.(new Error('File Reading error'));
+      this.onerror?.(new Error('File Reading error') as any);
     };
     await expect(openAndReadTextFile()).rejects.toThrowError(
       'File Reading error',
