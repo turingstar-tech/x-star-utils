@@ -15,6 +15,7 @@ describe('is-browser-compatibility', () => {
     // 谷歌 Chrome 浏览器版本 94.0.4606.81
     // Opera 浏览器版本 80.0.4170.72
     // Safari 浏览器版本 14.1
+    // WeChat iPhone Browser
     mockUserAgent(
       'Mozilla/5.0 (Windows NT 10.0; rv:90.0) Gecko/20100101 Firefox/90.0',
     );
@@ -58,5 +59,10 @@ describe('is-browser-compatibility', () => {
       'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Safari/605.1.15',
     );
     expect(isBrowserCompatibility()).toBe(false);
+
+    mockUserAgent(
+      'mozilla/5.0 (iphone; cpu iphone os 17_1_2 like mac os x) applewebkit/605.1.15 (khtml, like gecko) mobile/15e148 micromessenger/8.0.44(0x18002c2b) nettype/wifi language/zh_cn',
+    );
+    expect(isBrowserCompatibility()).toBe(true);
   });
 });

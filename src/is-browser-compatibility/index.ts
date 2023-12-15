@@ -6,6 +6,7 @@ export interface SysInterface {
   crios?: string;
   opera?: string;
   safari?: string;
+  wechat?: string;
 }
 
 export interface ISystemReg {
@@ -16,6 +17,7 @@ export interface ISystemReg {
   crios: RegExp;
   opera: RegExp;
   safari: RegExp;
+  wechat: RegExp;
 }
 
 interface ISystem {
@@ -34,19 +36,17 @@ interface ISystem {
 const compareVersion = (version1: string, version2: string): boolean => {
   const versionArr1 = version1?.split('.').map((v) => Number(v));
   const versionArr2 = version2?.split('.').map((v) => Number(v));
-  const ArrTemp =
-    versionArr1.length > versionArr2.length ? versionArr1 : versionArr2;
+  const minLength = Math.min(versionArr1.length, versionArr2.length);
 
-  let result = true;
-  ArrTemp.every((item, index) => {
-    const v1 = versionArr1[index] || 0;
-    const v2 = versionArr2[index];
+  for (let i = 0; i < minLength; i++) {
+    const v1 = versionArr1[i];
+    const v2 = versionArr2[i];
     if (v1 !== v2) {
-      result = v1 >= v2;
+      return v1 >= v2;
     }
-    return v1 === v2;
-  });
-  return result;
+  }
+
+  return versionArr1.length >= versionArr2.length;
 };
 
 /**
@@ -62,6 +62,7 @@ const judgeSystem = (ua: string): ISystem => {
     crios: /crios\/([\d.]+)/,
     opera: /opera.([\d.]+)/,
     safari: /version\/([\d.]+).*safari/,
+    wechat: /micromessenger\/([\d.]+)/,
   };
   let browser = '';
   let version = '';
@@ -94,6 +95,7 @@ const isBrowserCompatibility = (
     crios: '88.0',
     opera: '80.0',
     safari: '14.1',
+    wechat: '8.0',
   },
 ): boolean => {
   const system = judgeSystem(navigator?.userAgent?.toLowerCase());
@@ -105,6 +107,7 @@ const isBrowserCompatibility = (
     crios: '88.0',
     opera: '80.0',
     safari: '14.1',
+    wechat: '8.0',
     ...minBrowserVersion,
   };
   return (
