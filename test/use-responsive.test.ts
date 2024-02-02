@@ -70,14 +70,14 @@ describe('useResponsive test', () => {
     expect(result.current).toBe(false);
   });
 
-  test('success test for 800px', () => {
-    const { result } = renderHook(() => useResponsive('(max-width: 800px)'));
+  test('success test for 1000px', () => {
+    const { result } = renderHook(() => useResponsive('(max-width: 1000px)'));
 
     expect(result.current).toBe(false);
   });
 
-  test('success test for 1100px', () => {
-    const { result } = renderHook(() => useResponsive('(max-width: 1100px)'));
+  test("success test for ''", () => {
+    const { result } = renderHook(() => useResponsive(''));
 
     expect(result.current).toBe(false);
   });

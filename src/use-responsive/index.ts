@@ -11,9 +11,10 @@ import { useEffect, useState } from 'react';
  * mb 屏幕 <= 575px
  * iPad 576px <= 屏幕 <= 991px
  * pc 屏幕 >= 992px
+ * 符合window.matchMedia的查询字符串
  * @returns boolean
  */
-const useResponsive = (defaultValue?: string) => {
+const useResponsive = (matchString: string) => {
   const gridMap = new Map([
     ['xs', '(max-width: 575px)'],
     ['sm', '(min-width: 576px)'],
@@ -37,7 +38,13 @@ const useResponsive = (defaultValue?: string) => {
       ?.filter((screen) => !!screen[1])
       ?.map((screen) => screen[0]);
 
-    return breakpoints?.includes(defaultValue || 'xs');
+    const mapKeys = Array.from(gridMap.keys());
+
+    if (mapKeys.includes(matchString)) {
+      return breakpoints?.includes(matchString);
+    } else {
+      return window.matchMedia(matchString).matches;
+    }
   };
 
   const [isDefaultBreakpoint, setIsDefaultBreakpoint] = useState(

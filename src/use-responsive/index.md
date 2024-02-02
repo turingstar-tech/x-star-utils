@@ -13,6 +13,7 @@
  * mb 屏幕 <= 575px
  * iPad 576px <= 屏幕 <= 991px
  * pc 屏幕 >= 992px
+ * 符合window.matchMedia的查询字符串
  * @returns boolean
  */
 ```
