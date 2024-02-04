@@ -2,8 +2,7 @@
 
 ```
 /**
- * 传入的参数只能是xs | sm | md | lg | xl | xxl
- * 默认参数是xs 即返回 <= 575px
+ * 传入的参数可以是xs | sm | md | lg | xl | xxl | mb | iPad | pc | matchMedia的查询字符串
  * xs 屏幕 <= 575px
  * sm 屏幕 >= 576px
  * md 屏幕 >= 768px
