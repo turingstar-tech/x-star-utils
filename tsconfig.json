@@ -12,5 +12,5 @@
       "x-star-utils/*": ["src/*", "*"]
     }
   },
-  "include": [".dumirc.ts", "src/**/*", "test/**/*"]
+  "include": [".dumi/**/*", ".dumirc.ts", "src/**/*", "test/**/*"]
 }
