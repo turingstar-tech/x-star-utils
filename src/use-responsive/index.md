@@ -21,7 +21,7 @@
 import { useResponsive } from 'x-star-utils';
 
 export default () => {
-  const isMobile = useResponsive();
+  const isMobile = useResponsive('xs');
   const isiPad = useResponsive('iPad');
   const isPC = useResponsive('pc');
   return (

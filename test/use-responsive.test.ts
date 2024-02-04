@@ -2,11 +2,15 @@ import { describe, expect, jest, test } from '@jest/globals';
 import { renderHook } from '@testing-library/react-hooks';
 import { useResponsive } from '../src';
 
+jest.useFakeTimers();
+
+let targetQuery = '(max-width: 575px)';
+
 // 模拟 matchMedia 方法
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: (query: string) => ({
-    matches: query === '(max-width: 575px)',
+    matches: query === targetQuery,
     media: query,
     onchange: null,
     addListener: jest.fn(),
@@ -15,8 +19,11 @@ Object.defineProperty(window, 'matchMedia', {
 });
 
 describe('useResponsive test', () => {
+  afterEach(() => {
+    targetQuery = '(max-width: 575px)';
+  });
   // 测试 xs | sm | md | lg | xl | xxl | mb | iPad | pc
-  test('success test for xs', () => {
+  test('success test for xs', async () => {
     const { result } = renderHook(() => useResponsive('xs'));
 
     expect(result.current).toBe(true);
@@ -80,5 +87,17 @@ describe('useResponsive test', () => {
     const { result } = renderHook(() => useResponsive(''));
 
     expect(result.current).toBe(false);
+  });
+
+  test('success test for resize', async () => {
+    const { result } = renderHook(() => useResponsive('(max-width: 1000px)'));
+
+    expect(result.current).toBe(false);
+
+    targetQuery = '(max-width: 1000px)';
+    window.dispatchEvent(new Event('resize'));
+    await jest.runAllTimersAsync();
+
+    expect(result.current).toBe(true);
   });
 });
