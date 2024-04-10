@@ -1,5 +1,5 @@
-import { describe, expect, jest, test } from '@jest/globals';
-import { renderHook } from '@testing-library/react-hooks';
+import { afterEach, describe, expect, jest, test } from '@jest/globals';
+import { act, renderHook } from '@testing-library/react-hooks';
 import { useResponsive } from '../src';
 
 jest.useFakeTimers();
@@ -96,7 +96,7 @@ describe('useResponsive test', () => {
 
     targetQuery = '(max-width: 1000px)';
     window.dispatchEvent(new Event('resize'));
-    await jest.runAllTimersAsync();
+    act(() => jest.runAllTimers());
 
     expect(result.current).toBe(true);
   });
