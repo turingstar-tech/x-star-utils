@@ -65,7 +65,11 @@ const formatDate: React.FC<formatDateProps> = ({
   return (
     <>
       <span>{result}</span>
-      <sup style={{ fontSize: 10 }}> UTC{utcOffset}</sup>
+      <sup style={{ fontSize: 10 }}>
+        {' '}
+        UTC{utcOffset > 0 ? '+' : ''}
+        {utcOffset}
+      </sup>
     </>
   );
 };
