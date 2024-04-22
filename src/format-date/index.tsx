@@ -3,21 +3,99 @@
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import React from 'react';
+import isDST from 'x-star-utils/is-DST';
 dayjs.extend(utc);
 
 export interface formatDateProps {
   dateRange: [string | number, string | number] | [string | number];
   lang: 'zh' | 'en';
   separatorCH?: string;
+  region?: string;
 }
 
-// 1713485606000
-// 1713518006000
+export enum StandardTimeZone {
+  HawaiiStandardTime = -10, // North America  Pacific
+  MountainStandardTime = -7, // North America
+  PacificStandardTime = -8, // North America
+  CentralStandardTime = -6, // North America  Central America
+  EasternStandardTime = -5, // North America  Caribbean  Central America
+  ChinaStandardTime = 8, // 	Asia
+}
+
+export enum DaylightTimeZone {
+  HawaiiDaylightTime = -9, // North America  Pacific
+  PacificDaylightTime = -7, // North America
+  MountainDaylightTime = -6, // North America
+  CentralDaylightTime = -5, // North America  Central America
+  EasternDaylightTime = -4, // North America  Caribbean  Central America
+  ChinaStandardTime = 8, // 	Asia
+}
+
 const formatDate: React.FC<formatDateProps> = ({
   dateRange,
   lang,
   separatorCH,
 }) => {
+  const isInUS = () => {
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const USCity = ['Los_Angeles', 'Denver', 'New_York', 'Chicago'];
+    if (USCity.some((v) => timezone.indexOf(v) !== -1)) {
+      return true;
+    }
+    return false;
+  };
+
+  const utcOffset = dayjs(dateRange[0]).utcOffset() / 60;
+  const convertTimeZone = () => {
+    if (isDST(dateRange[0])) {
+      switch (utcOffset) {
+        case DaylightTimeZone.HawaiiDaylightTime:
+          return 'HDT';
+        case DaylightTimeZone.PacificDaylightTime:
+          return 'PDT';
+        case DaylightTimeZone.MountainDaylightTime:
+          return 'MDT';
+        case DaylightTimeZone.CentralDaylightTime:
+          return 'CDT';
+        case DaylightTimeZone.EasternDaylightTime:
+          return 'EDT';
+        case DaylightTimeZone.ChinaStandardTime:
+          return 'CST';
+        default:
+          return `GMT${utcOffset >= 0 ? `+${utcOffset}` : utcOffset}`;
+      }
+    } else {
+      switch (utcOffset) {
+        case StandardTimeZone.HawaiiStandardTime:
+          return 'HST';
+        case StandardTimeZone.PacificStandardTime:
+          return 'PST';
+        case StandardTimeZone.MountainStandardTime:
+          return 'MST';
+        case StandardTimeZone.CentralStandardTime:
+          return 'CST';
+        case StandardTimeZone.EasternStandardTime:
+          return 'EST';
+        case DaylightTimeZone.ChinaStandardTime:
+          return 'CST';
+        default:
+          return `GMT${utcOffset >= 0 ? `+${utcOffset}` : utcOffset}`;
+      }
+    }
+  };
+
+  const formatTimeZone = () => {
+    if (lang === 'zh') {
+      return `UTC${utcOffset > 0 ? '+' + utcOffset : utcOffset}`;
+    } else {
+      if (isInUS()) {
+        return convertTimeZone();
+      } else {
+        return `UTC${utcOffset > 0 ? '+' + utcOffset : utcOffset}`;
+      }
+    }
+  };
+
   const formatBaseStringMap = {
     zh: separatorCH ? `YYYY${separatorCH}MM${separatorCH}DD` : 'YYYY年MM月DD日',
     en: 'MMM DD, YYYY,',
@@ -28,7 +106,6 @@ const formatDate: React.FC<formatDateProps> = ({
     en: 'hh:mm A',
   };
 
-  const utcOffset = dayjs(dateRange[0]).utcOffset() / 60;
   const formatBaseString = formatBaseStringMap[lang];
   const formatTimeString = formatTimeStringMap[lang];
 
@@ -65,11 +142,7 @@ const formatDate: React.FC<formatDateProps> = ({
   return (
     <>
       <span>{result}</span>
-      <sup style={{ fontSize: 10 }}>
-        {' '}
-        UTC{utcOffset > 0 ? '+' : ''}
-        {utcOffset}
-      </sup>
+      <sup style={{ fontSize: 10 }}>{formatTimeZone()}</sup>
     </>
   );
 };

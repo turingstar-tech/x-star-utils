@@ -5,6 +5,7 @@ export { default as formatDate } from './format-date';
 export { default as formatDuration } from './format-duration';
 export { default as getDescription } from './get-description';
 export { default as getTransResult } from './get-trans-result';
+export { default as isDST } from './is-DST';
 export { default as isBrowserCompatibility } from './is-browser-compatibility';
 export type { SysInterface } from './is-browser-compatibility';
 export { default as openAndReadTextFile } from './open-and-read-text-file';

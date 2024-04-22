@@ -23,21 +23,9 @@ export default () => {
       </button>
       <div>
         {formatDate({
-          lang: 'en',
-          dateRange: [1713518006000, 1713399206000],
-        })}
-      </div>
-      <div>
-        {formatDate({
-          lang: 'zh',
-          dateRange: [1713518006000, 1713399206000],
-          separatorCH: '-',
-        })}
-      </div>
-      <div>
-        {formatDate({
-          lang: 'zh',
-          dateRange: [1713518006000, 1713399206000],
+          lang: lang,
+          dateRange: [new Date()],
+          region: 'US',
         })}
       </div>
     </>

@@ -42,7 +42,6 @@
     ]
   },
   "dependencies": {
-    "dayjs": "^1.11.7",
     "lodash": "^4.17.21"
   },
   "devDependencies": {
@@ -57,6 +56,7 @@
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "@umijs/lint": "^4.0.0",
+    "dayjs": "^1.11.10",
     "dumi": "^2.2.0",
     "eslint": "^8.23.0",
     "father": "^4.1.0",
@@ -72,6 +72,7 @@
     "react-test-renderer": "^18.2.0"
   },
   "peerDependencies": {
+    "dayjs": ">=1.0.0",
     "react": ">=16.9.0",
     "react-dom": ">=16.9.0"
   },
