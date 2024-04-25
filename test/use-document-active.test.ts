@@ -1,6 +1,6 @@
 import { describe, expect, jest, test } from '@jest/globals';
 import { act, renderHook } from '@testing-library/react-hooks';
-import { useDocumentActive } from '../src';
+import useDocumentActive from '../src/use-document-active';
 
 jest.useFakeTimers();
 

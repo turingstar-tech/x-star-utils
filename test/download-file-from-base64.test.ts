@@ -1,5 +1,6 @@
 import { describe, expect, jest, test } from '@jest/globals';
-import { downloadFileFromBase64 } from '../src';
+import downloadFileFromBase64 from '../src/download-file-from-base64';
+
 describe('download file from base64 test', () => {
   test('success test', async () => {
     const base64String = 'SGVsbG8gd29ybGQ=';

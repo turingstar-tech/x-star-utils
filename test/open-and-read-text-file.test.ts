@@ -1,5 +1,5 @@
 import { describe, expect, jest, test } from '@jest/globals';
-import { openAndReadTextFile } from '../src';
+import openAndReadTextFile from '../src/open-and-read-text-file';
 
 describe('open and read text file test', () => {
   test('success test', async () => {
@@ -21,7 +21,8 @@ describe('open and read text file test', () => {
     expect(document.createElement).toHaveBeenCalledTimes(1);
     expect(result).toBe('test');
   });
-  //未选择文件或文件类型不符合要求的用例
+
+  // 未选择文件或文件类型不符合要求的用例
   test('not choose or wrong type file error test', async () => {
     document.createElement = function () {
       return {
@@ -37,7 +38,8 @@ describe('open and read text file test', () => {
       '未选择文件或文件类型不符合要求！',
     );
   });
-  //用户取消文件的用例
+
+  // 用户取消文件的用例
   test('cancel read file error test', async () => {
     const mockFile = new File(['test'], 'mock.txt', { type: 'text/plain' });
     document.createElement = function () {
@@ -54,7 +56,8 @@ describe('open and read text file test', () => {
       '用户取消文件选择！',
     );
   });
-  //用户读取文件的失败用例
+
+  // 用户读取文件的失败用例
   test('read file error test', async () => {
     const mockFile = new File(['test'], 'mock.txt', { type: 'text/plain' });
     document.createElement = function () {

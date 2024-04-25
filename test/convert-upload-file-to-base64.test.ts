@@ -1,5 +1,6 @@
 import { describe, expect, test } from '@jest/globals';
-import { convertUploadFileToBase64 } from '../src';
+import convertUploadFileToBase64 from '../src/convert-upload-file-to-base64';
+
 describe('convert-upload-file-to-base64 test', () => {
   test('success test', async () => {
     // 创建一个虚拟的 File 对象

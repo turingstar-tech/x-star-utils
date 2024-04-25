@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals';
-import { randomString } from '../src';
+import randomString from '../src/random-string';
 
 describe('random string test', () => {
   test('success test', () => {

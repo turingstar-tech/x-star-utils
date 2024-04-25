@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals';
-import { getDescription } from '../src';
+import getDescription from '../src/get-description';
 
 describe('get description test', () => {
   test('chinese', () => {

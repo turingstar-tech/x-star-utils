@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals';
-import { toBase26 } from '../src';
+import toBase26 from '../src/to-base26';
 
 describe('to base26 test', () => {
   test('success test', () => {
