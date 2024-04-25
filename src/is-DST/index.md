@@ -5,7 +5,7 @@
 ```
 /**
  * 判断是否夏令时
- * @param Date | Dayjs | string | number | undefined
+ * @param string | number | Date | dayjs.Dayjs | null | undefined
  * @returns boolean
  */
 ```
