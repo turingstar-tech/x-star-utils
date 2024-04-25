@@ -10,7 +10,6 @@ export interface formatDateProps {
   dateRange: [string | number, string | number] | [string | number];
   lang: 'zh' | 'en';
   separatorCH?: string;
-  region?: string;
 }
 
 export enum StandardTimeZone {
@@ -111,6 +110,7 @@ const formatDate: React.FC<formatDateProps> = ({
 
   let result = '';
   if (dateRange.length === 1) {
+    // 只有一个时间,不存在时间范围
     const baseDate = dayjs(dateRange[0]).format(formatBaseString);
     const time = dayjs(dateRange[0]).format(formatTimeString);
     result = `${baseDate} ${time}`;
@@ -118,6 +118,7 @@ const formatDate: React.FC<formatDateProps> = ({
     let before = dayjs();
     let after = dayjs();
     if (dayjs(dateRange[0]).isBefore(dayjs(dateRange[1]))) {
+      // 传入时间段，调整顺序
       before = dayjs(dateRange[0]);
       after = dayjs(dateRange[1]);
     } else {
@@ -125,12 +126,14 @@ const formatDate: React.FC<formatDateProps> = ({
       after = dayjs(dateRange[0]);
     }
     if (before.isSame(after, 'day')) {
+      // 同一天则年月日不重复显示
       // 处在同一天
       const baseDate = before.format(formatBaseString);
       const startTime = before.format(formatTimeString);
       const endTime = after.format(formatTimeString);
       result = `${baseDate} ${startTime} - ${endTime}`;
     } else {
+      // 不在同一天
       const baseDateBefore = before.format(formatBaseString);
       const baseDateAfter = after.format(formatBaseString);
       const startTime = before.format(formatTimeString);
