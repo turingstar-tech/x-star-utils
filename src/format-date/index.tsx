@@ -1,6 +1,8 @@
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import React from 'react';
+import isDST from '../is-dst';
+
 dayjs.extend(utc);
 
 export interface formatDateProps {
@@ -30,65 +32,33 @@ export enum DaylightTimeZone {
 const formatDate = ({ dateRange, lang, separatorCH }: formatDateProps) => {
   const utcOffset = dayjs(dateRange[0]).utcOffset() / 60;
 
-  const isDST = (
-    base?: string | number | dayjs.Dayjs | Date | null | undefined,
-  ) => {
-    const date = dayjs(base);
-    const Jan1 = dayjs().startOf('year'); // 找出两个时间保证它们不管在南北半球都是不同的令时
-    const Jul1 = dayjs().month(6).date(1);
-
-    if (
-      Jan1.utcOffset() > Jul1.utcOffset() && // 北半球夏令时
-      date.utcOffset() !== Jan1.utcOffset()
-    ) {
-      return true;
-    }
-
-    if (
-      Jan1.utcOffset() < Jul1.utcOffset() && // 南半球夏令时
-      date.utcOffset() !== Jul1.utcOffset()
-    ) {
-      return true;
-    }
-
-    return false;
-  };
-
   const convertTimeZone = () => {
     if (isDST(dateRange[0])) {
-      switch (utcOffset) {
-        case DaylightTimeZone.HawaiiDaylightTime:
-          return 'HDT';
-        case DaylightTimeZone.PacificDaylightTime:
-          return 'PDT';
-        case DaylightTimeZone.MountainDaylightTime:
-          return 'MDT';
-        case DaylightTimeZone.CentralDaylightTime:
-          return 'CDT';
-        case DaylightTimeZone.EasternDaylightTime:
-          return 'EDT';
-        case DaylightTimeZone.ChinaStandardTime:
-          return 'CST';
-        default:
-          return `GMT${utcOffset >= 0 ? `+${utcOffset}` : utcOffset}`;
-      }
+      const timezoneAbbreviations: Record<number, string> = {
+        [DaylightTimeZone.HawaiiDaylightTime]: 'HDT',
+        [DaylightTimeZone.PacificDaylightTime]: 'PDT',
+        [DaylightTimeZone.MountainDaylightTime]: 'MDT',
+        [DaylightTimeZone.CentralDaylightTime]: 'CDT',
+        [DaylightTimeZone.EasternDaylightTime]: 'EDT',
+        [DaylightTimeZone.ChinaStandardTime]: 'CST',
+      };
+      return (
+        timezoneAbbreviations[utcOffset] ??
+        `GMT${utcOffset >= 0 ? `+${utcOffset}` : utcOffset}`
+      );
     } else {
-      switch (utcOffset) {
-        case StandardTimeZone.HawaiiStandardTime:
-          return 'HST';
-        case StandardTimeZone.PacificStandardTime:
-          return 'PST';
-        case StandardTimeZone.MountainStandardTime:
-          return 'MST';
-        case StandardTimeZone.CentralStandardTime:
-          return 'CST';
-        case StandardTimeZone.EasternStandardTime:
-          return 'EST';
-        case DaylightTimeZone.ChinaStandardTime:
-          return 'CST';
-        default:
-          return `GMT${utcOffset >= 0 ? `+${utcOffset}` : utcOffset}`;
-      }
+      const timezoneAbbreviations: Record<number, string> = {
+        [StandardTimeZone.HawaiiStandardTime]: 'HST',
+        [StandardTimeZone.PacificStandardTime]: 'PST',
+        [StandardTimeZone.MountainStandardTime]: 'MST',
+        [StandardTimeZone.CentralStandardTime]: 'CST',
+        [StandardTimeZone.EasternStandardTime]: 'EST',
+        [StandardTimeZone.ChinaStandardTime]: 'CST', // Note: 'CST' is used both for Central Standard Time and China Standard Time, which might be ambiguous in some contexts
+      };
+      return (
+        timezoneAbbreviations[utcOffset] ??
+        `GMT${utcOffset >= 0 ? `+${utcOffset}` : utcOffset}`
+      );
     }
   };
 

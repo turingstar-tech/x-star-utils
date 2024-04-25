@@ -1,30 +1,10 @@
 import { describe, expect, jest, test } from '@jest/globals';
 import { render } from '@testing-library/react';
-import { formatDateProps } from 'x-star-utils/format-date';
-import { formatDate } from '../src';
-
-jest.mock('dayjs', () => {
-  const originalDayjs = jest.requireActual<typeof import('dayjs')>('dayjs');
-  const mockDayjs = jest.fn((input?: string) => {
-    return originalDayjs(input);
-  }) as jest.MockedFunction<any>;
-  mockDayjs.extend = jest.fn();
-  mockDayjs.utc = jest.fn(() => mockDayjs());
-  return mockDayjs;
-});
+import type { formatDateProps } from '../src/format-date';
+import formatDate from '../src/format-date';
 
 describe('formatDate', () => {
   const mockDate = '2023-08-15T12:00:00Z';
-
-  // beforeEach(() => {
-  //   dayjs.mockImplementation((input) => {
-  //     if (input) {
-  //       return dayjs.utc(input);
-  //     }
-  //     return dayjs.utc(mockDate);
-  //   });
-  //   isDST.mockReturnValue(false);
-  // });
 
   test('should render single date with time', () => {
     const props: formatDateProps = {
@@ -81,5 +61,19 @@ describe('formatDate', () => {
 
     const { container } = render(formatDate(props));
     expect(container.textContent).toContain('2023/08/15 20:00UTC+8');
+  });
+
+  test('should render single date with time in US', () => {
+    const props: formatDateProps = {
+      dateRange: [mockDate],
+      lang: 'en',
+    };
+
+    jest.spyOn(Intl, 'DateTimeFormat').mockReturnValue({
+      resolvedOptions: () => ({ timeZone: 'Los_Angeles' }),
+    } as ReturnType<typeof Intl.DateTimeFormat>);
+
+    const { container } = render(formatDate(props));
+    expect(container.textContent).toContain('Aug 15, 2023, 08:00 PMCDT');
   });
 });
