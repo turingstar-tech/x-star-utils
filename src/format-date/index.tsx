@@ -1,9 +1,6 @@
-// lang: 'zh' | 'en'
-// date: '2020-01-01'
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import React from 'react';
-import isDST from '../is-DST';
 dayjs.extend(utc);
 
 export interface formatDateProps {
@@ -32,6 +29,31 @@ export enum DaylightTimeZone {
 
 const formatDate = ({ dateRange, lang, separatorCH }: formatDateProps) => {
   const utcOffset = dayjs(dateRange[0]).utcOffset() / 60;
+
+  const isDST = (
+    base?: string | number | dayjs.Dayjs | Date | null | undefined,
+  ) => {
+    const date = dayjs(base);
+    const Jan1 = dayjs().startOf('year'); // 找出两个时间保证它们不管在南北半球都是不同的令时
+    const Jul1 = dayjs().month(6).date(1);
+
+    if (
+      Jan1.utcOffset() > Jul1.utcOffset() && // 北半球夏令时
+      date.utcOffset() !== Jan1.utcOffset()
+    ) {
+      return true;
+    }
+
+    if (
+      Jan1.utcOffset() < Jul1.utcOffset() && // 南半球夏令时
+      date.utcOffset() !== Jul1.utcOffset()
+    ) {
+      return true;
+    }
+
+    return false;
+  };
+
   const convertTimeZone = () => {
     if (isDST(dateRange[0])) {
       switch (utcOffset) {
