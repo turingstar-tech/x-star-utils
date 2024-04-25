@@ -1,14 +1,12 @@
 # formatDate
 
-日期根据语言环境统一格式化
-
 ```
 /**
- * 选择语言
- * @param lang 语言
- * @param dateRange 日期范围
- * @param separatorCH 中文环境下年月日分隔符
- * @returns React.ReactNode
+ * 根据语言环境格式化时间
+ *
+ * @param date 时间
+ * @param options 格式化选项
+ * @returns 时间 JSX
  */
 ```
 

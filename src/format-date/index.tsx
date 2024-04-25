@@ -1,3 +1,4 @@
+import type { ConfigType } from 'dayjs';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
@@ -12,7 +13,6 @@ export enum StandardTimeZone {
   MountainStandardTime = -7, // North America
   CentralStandardTime = -6, // North America  Central America
   EasternStandardTime = -5, // North America  Caribbean  Central America
-  ChinaStandardTime = 8, // 	Asia
 }
 
 const standardTimeZoneMap: Record<number, string> = {
@@ -20,7 +20,6 @@ const standardTimeZoneMap: Record<number, string> = {
   [StandardTimeZone.MountainStandardTime]: 'MST',
   [StandardTimeZone.CentralStandardTime]: 'CST',
   [StandardTimeZone.EasternStandardTime]: 'EST',
-  [StandardTimeZone.ChinaStandardTime]: 'CST', // Note: 'CST' is used both for Central Standard Time and China Standard Time, which might be ambiguous in some contexts
 };
 
 export enum DaylightTimeZone {
@@ -35,20 +34,31 @@ const daylightTimeZoneMap: Record<number, string> = {
   [DaylightTimeZone.MountainDaylightTime]: 'MDT',
   [DaylightTimeZone.CentralDaylightTime]: 'CDT',
   [DaylightTimeZone.EasternDaylightTime]: 'EDT',
-  [StandardTimeZone.ChinaStandardTime]: 'CST',
 };
 
-export interface formatDateProps {
-  date:
-    | string
-    | number
-    | [string | number]
-    | [string | number, string | number];
-  lang: 'zh' | 'en';
+export interface FormatDateOptions {
+  /**
+   * 语言
+   */
+  lang?: 'zh' | 'en';
+
+  /**
+   * 中文环境下年月日分隔符
+   */
   separator?: string;
 }
 
-const formatDate = ({ date, lang, separator }: formatDateProps) => {
+/**
+ * 根据语言环境格式化时间
+ *
+ * @param date 时间
+ * @param options 格式化选项
+ * @returns 时间 JSX
+ */
+const formatDate = (
+  date: ConfigType | ConfigType[],
+  { lang = 'zh', separator }: FormatDateOptions = {},
+) => {
   const dateRange = Array.isArray(date) ? date : [date];
   const utcOffset = dayjs.tz(dateRange[0]).utcOffset() / 60;
 
@@ -64,7 +74,7 @@ const formatDate = ({ date, lang, separator }: formatDateProps) => {
 
   const isInUS = () => {
     const USCity = ['Los_Angeles', 'Denver', 'New_York', 'Chicago'];
-    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const { timeZone } = Intl.DateTimeFormat().resolvedOptions();
     return USCity.some((city) => timeZone.endsWith(city));
   };
 
@@ -81,43 +91,39 @@ const formatDate = ({ date, lang, separator }: formatDateProps) => {
     }
   };
 
-  let result = '';
-  if (dateRange.length === 1) {
-    // 只有一个时间,不存在时间范围
-    const baseDate = dayjs.tz(dateRange[0]).format(formatBaseString);
-    const time = dayjs.tz(dateRange[0]).format(formatTimeString);
-    result = `${baseDate} ${time}`;
-  } else {
-    let before = dayjs.tz();
-    let after = dayjs.tz();
-    if (dayjs.tz(dateRange[0]).isBefore(dayjs.tz(dateRange[1]))) {
-      // 传入时间段，调整顺序
-      before = dayjs.tz(dateRange[0]);
-      after = dayjs.tz(dateRange[1]);
+  const formatTime = () => {
+    if (dateRange.length === 1) {
+      // 只有一个时间，不存在时间范围
+      const first = dayjs.tz(dateRange[0]);
+      const baseDate = first.format(formatBaseString);
+      const time = first.format(formatTimeString);
+      return `${baseDate} ${time}`;
     } else {
-      before = dayjs.tz(dateRange[1]);
-      after = dayjs.tz(dateRange[0]);
+      const first = dayjs.tz(dateRange[0]);
+      const second = dayjs.tz(dateRange[1]);
+      const [before, after] = first.isBefore(second)
+        ? [first, second]
+        : [second, first];
+      if (before.isSame(after, 'day')) {
+        // 在同一天则年月日不重复显示
+        const baseDate = before.format(formatBaseString);
+        const startTime = before.format(formatTimeString);
+        const endTime = after.format(formatTimeString);
+        return `${baseDate} ${startTime} - ${endTime}`;
+      } else {
+        // 不在同一天
+        const baseDateBefore = before.format(formatBaseString);
+        const baseDateAfter = after.format(formatBaseString);
+        const startTime = before.format(formatTimeString);
+        const endTime = after.format(formatTimeString);
+        return `${baseDateBefore} ${startTime} - ${baseDateAfter} ${endTime}`;
+      }
     }
-    if (before.isSame(after, 'day')) {
-      // 同一天则年月日不重复显示
-      // 处在同一天
-      const baseDate = before.format(formatBaseString);
-      const startTime = before.format(formatTimeString);
-      const endTime = after.format(formatTimeString);
-      result = `${baseDate} ${startTime} - ${endTime}`;
-    } else {
-      // 不在同一天
-      const baseDateBefore = before.format(formatBaseString);
-      const baseDateAfter = after.format(formatBaseString);
-      const startTime = before.format(formatTimeString);
-      const endTime = after.format(formatTimeString);
-      result = `${baseDateBefore} ${startTime} - ${baseDateAfter} ${endTime}`;
-    }
-  }
+  };
 
   return (
     <>
-      <span>{result}</span>
+      <span>{formatTime()}</span>
       <sup style={{ fontSize: 10 }}>{formatTimeZone()}</sup>
     </>
   );

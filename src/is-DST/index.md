@@ -1,12 +1,11 @@
 # isDST
 
-判断是否夏令时
-
 ```
 /**
- * 判断是否夏令时
- * @param string | number | Date | dayjs.Dayjs | null | undefined
- * @returns boolean
+ * 判断时间是否为夏令时
+ *
+ * @param base 时间
+ * @returns 是否为夏令时
  */
 ```
 
