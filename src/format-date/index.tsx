@@ -3,7 +3,7 @@
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import React from 'react';
-import isDST from 'x-star-utils/is-DST';
+import isDST from '../is-DST';
 dayjs.extend(utc);
 
 export interface formatDateProps {
@@ -30,20 +30,7 @@ export enum DaylightTimeZone {
   ChinaStandardTime = 8, // 	Asia
 }
 
-const formatDate: React.FC<formatDateProps> = ({
-  dateRange,
-  lang,
-  separatorCH,
-}) => {
-  const isInUS = () => {
-    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const USCity = ['Los_Angeles', 'Denver', 'New_York', 'Chicago'];
-    if (USCity.some((v) => timezone.indexOf(v) !== -1)) {
-      return true;
-    }
-    return false;
-  };
-
+const formatDate = ({ dateRange, lang, separatorCH }: formatDateProps) => {
   const utcOffset = dayjs(dateRange[0]).utcOffset() / 60;
   const convertTimeZone = () => {
     if (isDST(dateRange[0])) {
@@ -83,18 +70,6 @@ const formatDate: React.FC<formatDateProps> = ({
     }
   };
 
-  const formatTimeZone = () => {
-    if (lang === 'zh') {
-      return `UTC${utcOffset > 0 ? '+' + utcOffset : utcOffset}`;
-    } else {
-      if (isInUS()) {
-        return convertTimeZone();
-      } else {
-        return `UTC${utcOffset > 0 ? '+' + utcOffset : utcOffset}`;
-      }
-    }
-  };
-
   const formatBaseStringMap = {
     zh: separatorCH ? `YYYY${separatorCH}MM${separatorCH}DD` : 'YYYY年MM月DD日',
     en: 'MMM DD, YYYY,',
@@ -107,6 +82,27 @@ const formatDate: React.FC<formatDateProps> = ({
 
   const formatBaseString = formatBaseStringMap[lang];
   const formatTimeString = formatTimeStringMap[lang];
+
+  const isInUS = () => {
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const USCity = ['Los_Angeles', 'Denver', 'New_York', 'Chicago'];
+    if (USCity.some((v) => timezone.indexOf(v) !== -1)) {
+      return true;
+    }
+    return false;
+  };
+
+  const formatTimeZone = () => {
+    if (lang === 'zh') {
+      return `UTC${utcOffset > 0 ? '+' + utcOffset : utcOffset}`;
+    } else {
+      if (isInUS()) {
+        return convertTimeZone();
+      } else {
+        return `UTC${utcOffset > 0 ? '+' + utcOffset : utcOffset}`;
+      }
+    }
+  };
 
   let result = '';
   if (dateRange.length === 1) {
