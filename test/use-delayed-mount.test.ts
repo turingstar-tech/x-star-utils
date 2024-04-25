@@ -13,9 +13,7 @@ describe('use delayed mount test', () => {
 
     expect(result.current).toEqual([false, false]);
 
-    act(() => {
-      jest.advanceTimersByTime(305);
-    });
+    act(() => jest.advanceTimersByTime(305));
 
     expect(result.current).toEqual([false, false]);
 
@@ -23,15 +21,11 @@ describe('use delayed mount test', () => {
 
     expect(result.current).toEqual([true, false]);
 
-    act(() => {
-      jest.advanceTimersByTime(5);
-    });
+    act(() => jest.advanceTimersByTime(5));
 
     expect(result.current).toEqual([true, false]);
 
-    act(() => {
-      jest.advanceTimersByTime(10);
-    });
+    act(() => jest.advanceTimersByTime(10));
 
     expect(result.current).toEqual([true, true]);
 
@@ -39,15 +33,11 @@ describe('use delayed mount test', () => {
 
     expect(result.current).toEqual([true, false]);
 
-    act(() => {
-      jest.advanceTimersByTime(295);
-    });
+    act(() => jest.advanceTimersByTime(295));
 
     expect(result.current).toEqual([true, false]);
 
-    act(() => {
-      jest.advanceTimersByTime(10);
-    });
+    act(() => jest.advanceTimersByTime(10));
 
     expect(result.current).toEqual([false, false]);
   });
