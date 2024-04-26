@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals';
-import { toChineseNum } from '../src';
+import toChineseNum from '../src/to-chinese-num';
 
 describe('to chinese num test', () => {
   test('success test', () => {

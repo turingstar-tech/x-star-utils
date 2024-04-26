@@ -1,5 +1,6 @@
 import { describe, expect, jest, test } from '@jest/globals';
-import { downloadTextFile } from '../src';
+import downloadTextFile from '../src/download-text-file';
+
 describe('download text file test', () => {
   test('success test', async () => {
     const mockContent = 'Hello, World!';

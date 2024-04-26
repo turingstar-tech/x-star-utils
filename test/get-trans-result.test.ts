@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals';
-import { getTransResult } from '../src';
+import getTransResult from '../src/get-trans-result';
 
 describe('get trans result test', () => {
   test('success test', () => {

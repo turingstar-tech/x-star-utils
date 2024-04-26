@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, jest, test } from '@jest/globals';
 import { act, renderHook } from '@testing-library/react-hooks';
-import { useResponsive } from '../src';
+import useResponsive from '../src/use-responsive';
 
 jest.useFakeTimers();
 
@@ -22,6 +22,7 @@ describe('useResponsive test', () => {
   afterEach(() => {
     targetQuery = '(max-width: 575px)';
   });
+
   // 测试 xs | sm | md | lg | xl | xxl | mb | iPad | pc
   test('success test for xs', async () => {
     const { result } = renderHook(() => useResponsive('xs'));

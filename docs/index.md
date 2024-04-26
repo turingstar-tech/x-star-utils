@@ -1,6 +1,6 @@
 ---
 hero:
-  title: library
+  title: x-star-utils
   description: A react utils library developed by turingstar
   actions:
     - text: Hello
@@ -18,5 +18,3 @@ features:
     emoji: 🚀
     description: Put ! description here
 ---
-
-x-star-utils

@@ -1,5 +1,6 @@
 import { describe, expect, test } from '@jest/globals';
-import { isBrowserCompatibility } from '../src';
+import isBrowserCompatibility from '../src/is-browser-compatibility';
+
 describe('is-browser-compatibility', () => {
   test('success test', () => {
     // 模拟不同浏览器和版本的情况

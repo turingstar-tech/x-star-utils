@@ -1,6 +1,6 @@
 import { describe, expect, jest, test } from '@jest/globals';
 import { act, renderHook } from '@testing-library/react-hooks';
-import { useDelayedMount } from '../src';
+import useDelayedMount from '../src/use-delayed-mount';
 
 jest.useFakeTimers();
 

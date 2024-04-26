@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals';
-import { formatDuration } from '../src';
+import formatDuration from '../src/format-duration';
 
 describe('format duration test', () => {
   test('success test', () => {
