@@ -1,4 +1,3 @@
-import type { ConfigType } from 'dayjs';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
@@ -56,11 +55,13 @@ export interface FormatDateOptions {
  * @returns 时间 JSX
  */
 const formatDate = (
-  date: ConfigType | ConfigType[],
+  date: dayjs.ConfigType | dayjs.ConfigType[],
   { lang = 'zh', separator }: FormatDateOptions = {},
 ) => {
-  const dateRange = Array.isArray(date) ? date : [date];
-  const utcOffset = dayjs.tz(dateRange[0]).utcOffset() / 60;
+  const timeZone = dayjs.tz.guess();
+  const dateRange = (Array.isArray(date) ? date : [date]).map((date) =>
+    dayjs(date).tz(timeZone),
+  );
 
   const formatBaseString = {
     zh: separator ? `YYYY${separator}MM${separator}DD` : 'YYYY年MM月DD日',
@@ -72,20 +73,20 @@ const formatDate = (
     en: 'hh:mm A',
   }[lang];
 
-  const isInUS = () => {
-    const USCity = ['Los_Angeles', 'Denver', 'New_York', 'Chicago'];
-    const { timeZone } = Intl.DateTimeFormat().resolvedOptions();
-    return USCity.some((city) => timeZone.endsWith(city));
-  };
+  const isInUS = () =>
+    [
+      'America/Los_Angeles',
+      'America/Denver',
+      'America/Chicago',
+      'America/New_York',
+    ].includes(timeZone);
 
   const formatTimeZone = () => {
+    const utcOffset = dateRange[0].utcOffset() / 60;
     if (lang === 'en' && isInUS()) {
-      const timeZoneMap = isDST(dateRange[0])
-        ? daylightTimeZoneMap
-        : standardTimeZoneMap;
-      return (
-        timeZoneMap[utcOffset] ?? `UTC${utcOffset >= 0 ? '+' : ''}${utcOffset}`
-      );
+      return isDST(dateRange[0], timeZone)
+        ? daylightTimeZoneMap[utcOffset]
+        : standardTimeZoneMap[utcOffset];
     } else {
       return `UTC${utcOffset >= 0 ? '+' : ''}${utcOffset}`;
     }
@@ -94,16 +95,13 @@ const formatDate = (
   const formatTime = () => {
     if (dateRange.length === 1) {
       // 只有一个时间，不存在时间范围
-      const first = dayjs.tz(dateRange[0]);
-      const baseDate = first.format(formatBaseString);
-      const time = first.format(formatTimeString);
+      const baseDate = dateRange[0].format(formatBaseString);
+      const time = dateRange[0].format(formatTimeString);
       return `${baseDate} ${time}`;
     } else {
-      const first = dayjs.tz(dateRange[0]);
-      const second = dayjs.tz(dateRange[1]);
-      const [before, after] = first.isBefore(second)
-        ? [first, second]
-        : [second, first];
+      const [before, after] = dateRange[0].isBefore(dateRange[1])
+        ? [dateRange[0], dateRange[1]]
+        : [dateRange[1], dateRange[0]];
       if (before.isSame(after, 'day')) {
         // 在同一天则年月日不重复显示
         const baseDate = before.format(formatBaseString);

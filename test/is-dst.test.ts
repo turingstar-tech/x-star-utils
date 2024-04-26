@@ -13,7 +13,7 @@ describe('is dst test', () => {
   });
 
   test('checks if a date is DST in Shanghai', () => {
-    expect(isDST('2023-07-01', 'Asia/Shanghai')).toBe(false); // 非夏令时日期
-    expect(isDST('2023-12-01', 'Asia/Shanghai')).toBe(false); // 非夏令时日期
+    expect(isDST('2023-07-01')).toBe(false); // 非夏令时日期
+    expect(isDST('2023-12-01')).toBe(false); // 非夏令时日期
   });
 });
