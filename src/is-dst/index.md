@@ -4,7 +4,8 @@
 /**
  * 判断时间是否为夏令时
  *
- * @param base 时间
+ * @param base 时间 （可选）
+ * @param timeZone 时区（可选，通过 dayjs.tz.guess() 或者 Intl.DateTimeFormat().resolvedOptions() 获取）
  * @returns 是否为夏令时
  */
 ```
