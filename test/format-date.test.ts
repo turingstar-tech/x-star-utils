@@ -48,7 +48,7 @@ describe('formatDate', () => {
   test('should render daylight time zone in New York', () => {
     jest
       .spyOn(Intl.DateTimeFormat.prototype, 'resolvedOptions')
-      .mockReturnValue({ timeZone: 'New_York' } as any);
+      .mockReturnValue({ timeZone: 'America/New_York' } as any);
 
     dayjs.tz.setDefault('America/New_York');
 

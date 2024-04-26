@@ -20,17 +20,11 @@ export default () => {
       <button onClick={() => setLang(lang === 'zh' ? 'en' : 'zh')}>
         {'切换语言'}
       </button>
+      <div>{formatDate(new Date(), { lang, separator: '-' })}</div>
       <div>
-        {formatDate({
-          lang: lang,
-          dateRange: [new Date()],
-        })}
-      </div>
-      <div>
-        {formatDate({
-          lang: lang,
-          dateRange: [1713922083000, 1714008483000],
-          separatorCH: '-',
+        {formatDate([1713922083000, 1714008483000], {
+          lang,
+          separator: '-',
         })}
       </div>
     </>

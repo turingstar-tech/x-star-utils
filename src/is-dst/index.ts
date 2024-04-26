@@ -12,12 +12,11 @@ dayjs.extend(timezone);
  * @param base 时间
  * @returns 是否为夏令时
  */
-const isDST = (base?: ConfigType) => {
-  const date = dayjs.tz(base);
-
+const isDST = (base?: ConfigType, defaultTimeZone = dayjs.tz.guess()) => {
+  const date = dayjs.tz(base, defaultTimeZone);
   // 找出两个时间保证它们不管在南北半球都是不同的令时
-  const Jan1 = dayjs.tz().startOf('year');
-  const Jul1 = dayjs.tz().month(6).startOf('month');
+  const Jan1 = dayjs.tz(dayjs(), defaultTimeZone).startOf('year');
+  const Jul1 = dayjs.tz(dayjs(), defaultTimeZone).month(6).startOf('month');
 
   return (
     // 北半球夏令时
