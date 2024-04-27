@@ -1,5 +1,6 @@
 /**
- * 前端将字符串以文件形式导出
+ * 前端将字符串以文件形式导出，即下载文件
+ *
  * @param content 文件内容字符串
  * @param filename 文件名
  */
@@ -13,4 +14,5 @@ const downloadTextFile = (content: BlobPart, filename: string) => {
   eleLink.click();
   document.body.removeChild(eleLink);
 };
+
 export default downloadTextFile;

@@ -1,10 +1,11 @@
 /**
  * 将 UploadFile 转换为 Base64 编码的字符串
- * @param {File} file - 上传的文件
- * @returns {Promise<string>} Base64 编码的字符串
+ *
+ * @param file 上传的文件
+ * @returns Base64 编码的字符串
  */
-function convertUploadFileToBase64(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
+const convertUploadFileToBase64 = (file: File) =>
+  new Promise<string>((resolve, reject) => {
     const reader = new FileReader();
     reader.onerror = (error) => {
       reject(error);
@@ -17,5 +18,5 @@ function convertUploadFileToBase64(file: File): Promise<string> {
       resolve(base64);
     };
   });
-}
+
 export default convertUploadFileToBase64;

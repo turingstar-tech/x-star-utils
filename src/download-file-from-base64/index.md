@@ -1,13 +1,13 @@
 # downloadFileFromBase64
 
-将 Base64 字符串转换为文件并下载
-
 ```
 /**
  * 将 Base64 字符串转换为文件并下载
- * @param {string} base64String - Base64 字符串
- * @param {string} fileName - 要保存的文件名
- * 后端rpc设置的bytes类型，请求接收到base64格式的字符串，转成文件下载
+ *
+ * 后端 RPC 设置的 bytes 类型，请求接收到 Base64 格式的字符串，转成文件下载
+ *
+ * @param base64String Base64 字符串
+ * @param fileName 要保存的文件名
  */
 ```
 
@@ -17,6 +17,7 @@ import {
   convertUploadFileToBase64,
   downloadFileFromBase64,
 } from 'x-star-utils';
+
 export default () => {
   const [text, setText] = useState('');
   return (

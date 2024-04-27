@@ -1,18 +1,18 @@
 # getDescription
 
-根据语言在文本后面加上冒号
-
 ```
 /**
- * 选择语言
+ * 根据语言在文本后面加上冒号
+ *
  * @param lang 语言
- * @param text 字段
- * @returns string
+ * @param text 文本
+ * @returns 带冒号的文本
  */
 ```
 
 ```jsx
 import { getDescription } from 'x-star-utils';
+
 export default () => {
   return (
     <div>

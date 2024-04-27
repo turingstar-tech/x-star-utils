@@ -37,7 +37,7 @@ export default () => {
         >
           Don't{' '}
         </span>
-      )}{' '}
+      )}
       Hover me!
     </div>
   );

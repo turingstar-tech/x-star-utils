@@ -8,8 +8,8 @@ dayjs.extend(timezone);
 /**
  * 判断时间是否为夏令时
  *
- * @param date 时间
- * @param timeZone 时区
+ * @param date 时间，默认为当前时间
+ * @param timeZone 时区，默认为 `dayjs.tz.guess()`
  * @returns 是否为夏令时
  */
 const isDST = (date?: dayjs.ConfigType, timeZone = dayjs.tz.guess()) => {

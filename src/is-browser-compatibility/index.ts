@@ -9,7 +9,7 @@ export interface SysInterface {
   wechat?: string;
 }
 
-export interface ISystemReg {
+interface SysRegExp {
   ie: RegExp;
   firefox: RegExp;
   fxios: RegExp;
@@ -20,22 +20,27 @@ export interface ISystemReg {
   wechat: RegExp;
 }
 
-interface ISystem {
+interface SysVersion {
   browser: string;
   version: string;
 }
 
 /**
- * @param version1 版本号1
- * @param version2 版本号2
- * @returns 返回v1是否大于v2
- * compareVersion('1.2.4', '1.1.5') // true
- * compareVersion('1.2', '1.10.5') // false
- * compareVersion('1.00.03', '1.0.03') // true
+ * 判断版本号 1 是否不小于版本号 2
+ *
+ * `compareVersion('1.2.4', '1.1.5')` 返回 `true`
+ *
+ * `compareVersion('1.2', '1.10.5')` 返回 `false`
+ *
+ * `compareVersion('1.00.03', '1.0.03')` 返回 `true`
+ *
+ * @param version1 版本号 1
+ * @param version2 版本号 2
+ * @returns 判断结果
  */
-const compareVersion = (version1: string, version2: string): boolean => {
-  const versionArr1 = version1?.split('.').map((v) => Number(v));
-  const versionArr2 = version2?.split('.').map((v) => Number(v));
+const compareVersion = (version1: string, version2: string) => {
+  const versionArr1 = version1.split('.').map((v) => parseInt(v));
+  const versionArr2 = version2.split('.').map((v) => parseInt(v));
   const minLength = Math.min(versionArr1.length, versionArr2.length);
 
   for (let i = 0; i < minLength; i++) {
@@ -50,11 +55,13 @@ const compareVersion = (version1: string, version2: string): boolean => {
 };
 
 /**
+ * 获取浏览器版本
  *
- * @returns 浏览器类别对象数组
+ * @param userAgent 用户代理字符串
+ * @returns 浏览器版本
  */
-const judgeSystem = (ua: string): ISystem => {
-  const systemMatch: ISystemReg = {
+const judgeSystem = (userAgent: string): SysVersion => {
+  const systemMatch: SysRegExp = {
     ie: /msie ([d.]+)/,
     firefox: /firefox\/([\d.]+)/,
     fxios: /fxios\/([\d.]+)/,
@@ -67,7 +74,7 @@ const judgeSystem = (ua: string): ISystem => {
   let browser = '';
   let version = '';
   Object.keys(systemMatch).every((item) => {
-    const userMatch = ua.match(systemMatch[item as keyof ISystemReg]);
+    const userMatch = userAgent.match(systemMatch[item as keyof SysRegExp]);
     if (userMatch) {
       browser = item;
       version = userMatch[1];
@@ -82,12 +89,13 @@ const judgeSystem = (ua: string): ISystem => {
 };
 
 /**
+ * 判断浏览器是否兼容
  *
- * @param minBrowserVersion
- * @returns 浏览器是否兼容
+ * @param minBrowserVersions 最低版本号
+ * @returns 是否兼容
  */
 const isBrowserCompatibility = (
-  minBrowserVersion: SysInterface = {
+  minBrowserVersions: SysInterface = {
     ie: '9999.0',
     firefox: '80.0',
     chrome: '88.0',
@@ -97,8 +105,8 @@ const isBrowserCompatibility = (
     safari: '14.1',
     wechat: '8.0',
   },
-): boolean => {
-  const system = judgeSystem(navigator?.userAgent?.toLowerCase());
+) => {
+  const system = judgeSystem(navigator.userAgent.toLowerCase());
   const browserVersions = {
     ie: '9999.0',
     firefox: '80.0',
@@ -108,7 +116,7 @@ const isBrowserCompatibility = (
     opera: '80.0',
     safari: '14.1',
     wechat: '8.0',
-    ...minBrowserVersion,
+    ...minBrowserVersions,
   };
   return (
     !!browserVersions[system.browser as keyof SysInterface] &&
@@ -118,4 +126,5 @@ const isBrowserCompatibility = (
     )
   );
 };
+
 export default isBrowserCompatibility;

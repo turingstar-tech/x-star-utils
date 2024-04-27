@@ -1,37 +1,17 @@
 # isBrowserCompatibility
 
-主流浏览器兼容检测函数
-
 ```
 /**
+ * 判断浏览器是否兼容
  *
- * @param minBrowserVersion
-  ie?: string;
-  firefox?: string;
-  chrome?: string;
-  fxios?: string;
-  crios?: string;
-  opera?: string;
-  safari?: string;
-  wechat?: string;
- * @returns 浏览器是否兼容
+ * @param minBrowserVersions 最低版本号
+ * @returns 是否兼容
  */
-
- 默认版本检测
- minBrowserVersion: SysInterface = {
-  ie: '9999.0',
-  firefox: '80.0',
-  chrome: '88.0',
-  fxios: '80.0',
-  crios: '88.0',
-  opera: '80.0',
-  safari: '14.1',
-  wechat: '8.0',
- }
 ```
 
 ```jsx
 import { isBrowserCompatibility } from 'x-star-utils';
+
 export default () => {
   return (
     <>

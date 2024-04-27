@@ -1,20 +1,20 @@
 # getTransResult
 
-中英文翻译函数
-
 ```
 /**
- * 选择语言
+ * 根据语言选择文本
+ *
  * @param lang 语言
- * @param zhText 中文字段
- * @param enText 英文字段
- * @returns string
+ * @param zhText 中文文本
+ * @param enText 英文文本
+ * @returns 对应语言的文本
  */
 ```
 
 ```jsx
 import { useState } from 'react';
 import { getTransResult } from 'x-star-utils';
+
 export default () => {
   const [lang, setLang] = useState('zh');
   return (
