@@ -42,8 +42,7 @@
     ]
   },
   "dependencies": {
-    "@babel/runtime": "^7.24.1",
-    "lodash": "^4.17.21"
+    "@babel/runtime": "^7.24.1"
   },
   "devDependencies": {
     "@babel/core": "^7.24.1",

@@ -2,18 +2,24 @@
 
 ```
 /**
- * 传入的参数可以是xs | sm | md | lg | xl | xxl | mb | iPad | pc | matchMedia的查询字符串
- * xs 屏幕 <= 575px
- * sm 屏幕 >= 576px
- * md 屏幕 >= 768px
- * lg 屏幕 >= 992px
- * xl 屏幕 >= 1200px
- * xxl 屏幕 >= 1600px
- * mb 屏幕 <= 575px
- * iPad 576px <= 屏幕 <= 991px
- * pc 屏幕 >= 992px
- * 符合window.matchMedia的查询字符串
- * @returns boolean
+ * 判断媒体查询是否匹配
+ *
+ * 可以使用某些字符串匹配屏幕宽度
+ *
+ * | 字符串 |        屏幕限制        |
+ * | :----: | :--------------------: |
+ * |   xs   |      宽度 < 576px      |
+ * |   sm   |     宽度 >= 576px      |
+ * |   md   |     宽度 >= 768px      |
+ * |   lg   |     宽度 >= 992px      |
+ * |   xl   |     宽度 >= 1200px     |
+ * |  xxl   |     宽度 >= 1600px     |
+ * |   mb   |     宽度 <= 575px      |
+ * |  iPad  | 576px <= 宽度 <= 991px |
+ * |   pc   |     宽度 >= 992px      |
+ *
+ * @param query 查询字符串
+ * @returns 是否匹配
  */
 ```
 

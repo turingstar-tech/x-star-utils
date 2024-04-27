@@ -4,8 +4,8 @@
 /**
  * 判断时间是否为夏令时
  *
- * @param date 时间 （可选）
- * @param timeZone 时区（可选，通过 dayjs.tz.guess() 获取）
+ * @param date 时间，默认为当前时间
+ * @param timeZone 时区，默认为 `dayjs.tz.guess()`
  * @returns 是否为夏令时
  */
 ```
@@ -13,6 +13,7 @@
 ```jsx
 import { useState } from 'react';
 import { isDST } from 'x-star-utils';
+
 export default () => {
   return (
     <>

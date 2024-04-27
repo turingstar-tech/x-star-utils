@@ -11,4 +11,9 @@ describe('get description test', () => {
     const result = getDescription('en', 'mode');
     expect(result).toBe('mode: ');
   });
+
+  test('undefined', () => {
+    const result = getDescription('zh', undefined);
+    expect(result).toBe('：');
+  });
 });
