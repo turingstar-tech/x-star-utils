@@ -4,7 +4,7 @@
 /**
  * 将数字转换成 26 进制的字母字符串
  *
- * A B C ... AA AB AC ... BA BB BC ...
+ * A B C ... BA BB BC ...
  *
  * @param num 数字
  * @returns 字母字符串
