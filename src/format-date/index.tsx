@@ -37,6 +37,11 @@ const daylightTimeZoneMap: Record<number, string> = {
 
 export interface FormatDateOptions {
   /**
+   * 时区
+   */
+  timeZone?: string;
+
+  /**
    * 语言
    */
   lang?: 'zh' | 'en';
@@ -55,10 +60,16 @@ export interface FormatDateOptions {
  * @returns 时间 JSX
  */
 const formatDate = (
-  date: dayjs.ConfigType | dayjs.ConfigType[],
-  { lang = 'zh', separator }: FormatDateOptions = {},
+  date?:
+    | dayjs.ConfigType
+    | [dayjs.ConfigType]
+    | [dayjs.ConfigType, dayjs.ConfigType],
+  {
+    timeZone = dayjs.tz.guess(),
+    lang = 'zh',
+    separator,
+  }: FormatDateOptions = {},
 ) => {
-  const timeZone = dayjs.tz.guess();
   const dateRange = (Array.isArray(date) ? date : [date]).map((date) =>
     dayjs(date).tz(timeZone),
   );
