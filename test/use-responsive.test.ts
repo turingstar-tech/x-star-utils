@@ -97,7 +97,7 @@ describe('useResponsive test', () => {
 
     targetQuery = '(max-width: 1000px)';
     window.dispatchEvent(new Event('resize'));
-    act(() => jest.runAllTimers());
+    act(jest.runOnlyPendingTimers);
 
     expect(result.current).toBe(true);
   });
