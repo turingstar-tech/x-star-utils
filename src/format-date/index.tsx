@@ -52,6 +52,11 @@ export interface FormatDateOptions {
   separator?: string;
 
   /**
+   * 日期范围的分隔符
+   */
+  dateRangeSeparator?: string;
+
+  /**
    * 是否显示到秒
    */
   showSecond?: boolean;
@@ -78,6 +83,7 @@ const formatDate = (
     timeZone = dayjs.tz.guess(),
     lang = 'zh',
     separator,
+    dateRangeSeparator = '-',
     showSecond = false,
     showDate = true,
   }: FormatDateOptions = {},
@@ -137,7 +143,7 @@ const formatDate = (
           ? `${startDate} ${startTime} - ${endTime}`
           : `${startTime} - ${endTime}`
         : showDate
-        ? `${startDate} ${startTime} - ${endDate} ${endTime}`
+        ? `${startDate} ${startTime} ${dateRangeSeparator} ${endDate} ${endTime}`
         : `${startTime} - (+${daysDiff} ${
             lang === 'en' ? (daysDiff > 1 ? 'days' : 'day') : '天'
           }) ${endTime}`;
