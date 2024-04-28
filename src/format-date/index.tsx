@@ -55,6 +55,11 @@ export interface FormatDateOptions {
    * 是否显示到秒
    */
   showSecond?: boolean;
+
+  /**
+   * 当非跨天时间段是否显示日期
+   */
+  showDate?: boolean;
 }
 
 /**
@@ -74,6 +79,7 @@ const formatDate = (
     lang = 'zh',
     separator,
     showSecond = false,
+    showDate = true,
   }: FormatDateOptions = {},
 ) => {
   const dateRange = (Array.isArray(date) ? date : [date]).map((date) =>
@@ -114,7 +120,7 @@ const formatDate = (
       // 只有一个时间，不存在时间范围
       const baseDate = dateRange[0].format(formatDateTemplate);
       const baseTime = dateRange[0].format(formatTimeTemplate);
-      return `${baseDate} ${baseTime}`;
+      return showDate ? `${baseDate} ${baseTime}` : baseTime;
     } else {
       const [before, after] = dateRange[0].isBefore(dateRange[1])
         ? [dateRange[0], dateRange[1]]
@@ -124,7 +130,9 @@ const formatDate = (
       const endDate = after.format(formatDateTemplate);
       const endTime = after.format(formatTimeTemplate);
       return startDate === endDate
-        ? `${startDate} ${startTime} - ${endTime}`
+        ? showDate
+          ? `${startDate} ${startTime} - ${endTime}`
+          : `${startTime} - ${endTime}`
         : `${startDate} ${startTime} - ${endDate} ${endTime}`;
     }
   };

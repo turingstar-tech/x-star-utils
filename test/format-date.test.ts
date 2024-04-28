@@ -12,6 +12,21 @@ describe('formatDate', () => {
     expect(container.textContent).toBe('Aug 15, 2023, 08:00:00 PMUTC+8');
   });
 
+  test('should render without date', () => {
+    const { container, rerender } = render(
+      formatDate(mockDate, { lang: 'en', showDate: false }),
+    );
+    expect(container.textContent).toBe('08:00 PMUTC+8');
+
+    rerender(
+      formatDate([mockDate, '2023-08-15T14:00:00Z'], {
+        lang: 'en',
+        showDate: false,
+      }),
+    );
+    expect(container.textContent).toBe('08:00 PM - 10:00 PMUTC+8');
+  });
+
   test('should handle date range on the same day', () => {
     const { container } = render(
       formatDate([mockDate, '2023-08-15T15:30:00Z'], { lang: 'en' }),
