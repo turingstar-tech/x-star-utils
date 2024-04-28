@@ -15,3 +15,4 @@ export { default as toChineseNum } from './to-chinese-num';
 export { default as useDelayedMount } from './use-delayed-mount';
 export { default as useDocumentActive } from './use-document-active';
 export { default as useResponsive } from './use-responsive';
+export { default as wrappedLazy } from './wrapped-lazy';
