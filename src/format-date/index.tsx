@@ -50,6 +50,21 @@ export interface FormatDateOptions {
    * 中文环境下年月日分隔符
    */
   separator?: string;
+
+  /**
+   * 日期范围的分隔符
+   */
+  durationIndicator?: string;
+
+  /**
+   * 是否显示日期
+   */
+  showDate?: boolean;
+
+  /**
+   * 是否显示秒
+   */
+  showSecond?: boolean;
 }
 
 /**
@@ -68,21 +83,14 @@ const formatDate = (
     timeZone = dayjs.tz.guess(),
     lang = 'zh',
     separator,
+    durationIndicator = '-',
+    showDate = true,
+    showSecond = false,
   }: FormatDateOptions = {},
 ) => {
   const dateRange = (Array.isArray(date) ? date : [date]).map((date) =>
     dayjs(date).tz(timeZone),
   );
-
-  const formatBaseString = {
-    zh: separator ? `YYYY${separator}MM${separator}DD` : 'YYYY年MM月DD日',
-    en: 'MMM DD, YYYY,',
-  }[lang];
-
-  const formatTimeString = {
-    zh: 'HH:mm',
-    en: 'hh:mm A',
-  }[lang];
 
   const isInUS = () =>
     [
@@ -94,7 +102,7 @@ const formatDate = (
 
   const formatTimeZone = () => {
     const utcOffset = dateRange[0].utcOffset() / 60;
-    if (lang === 'en' && isInUS()) {
+    if (lang !== 'zh' && isInUS()) {
       return isDST(dateRange[0], timeZone)
         ? daylightTimeZoneMap[utcOffset]
         : standardTimeZoneMap[utcOffset];
@@ -103,36 +111,56 @@ const formatDate = (
     }
   };
 
-  const formatTime = () => {
+  const formatDateTemplate = {
+    zh: separator ? `YYYY${separator}MM${separator}DD` : 'YYYY年MM月DD日',
+    en: 'MMM DD, YYYY,',
+  }[lang];
+
+  const formatTimeTemplate = {
+    zh: `HH:mm${showSecond ? ':ss' : ''}`,
+    en: `hh:mm${showSecond ? ':ss' : ''} A`,
+  }[lang];
+
+  const formatDateTime = () => {
     if (dateRange.length === 1) {
       // 只有一个时间，不存在时间范围
-      const baseDate = dateRange[0].format(formatBaseString);
-      const time = dateRange[0].format(formatTimeString);
-      return `${baseDate} ${time}`;
+      const baseDate = dateRange[0].format(formatDateTemplate);
+      const baseTime = dateRange[0].format(formatTimeTemplate);
+      return showDate ? `${baseDate} ${baseTime}` : baseTime;
     } else {
       const [before, after] = dateRange[0].isBefore(dateRange[1])
         ? [dateRange[0], dateRange[1]]
         : [dateRange[1], dateRange[0]];
-      if (before.isSame(after, 'day')) {
-        // 在同一天则年月日不重复显示
-        const baseDate = before.format(formatBaseString);
-        const startTime = before.format(formatTimeString);
-        const endTime = after.format(formatTimeString);
-        return `${baseDate} ${startTime} - ${endTime}`;
+      const startDate = before.format(formatDateTemplate);
+      const startTime = before.format(formatTimeTemplate);
+      const endDate = after.format(formatDateTemplate);
+      const endTime = after.format(formatTimeTemplate);
+      if (startDate === endDate) {
+        // 在同一天
+        if (showDate) {
+          return `${startDate} ${startTime} ${durationIndicator} ${endTime}`;
+        } else {
+          return `${startTime} ${durationIndicator} ${endTime}`;
+        }
       } else {
         // 不在同一天
-        const baseDateBefore = before.format(formatBaseString);
-        const baseDateAfter = after.format(formatBaseString);
-        const startTime = before.format(formatTimeString);
-        const endTime = after.format(formatTimeString);
-        return `${baseDateBefore} ${startTime} - ${baseDateAfter} ${endTime}`;
+        if (showDate) {
+          return `${startDate} ${startTime} ${durationIndicator} ${endDate} ${endTime}`;
+        } else {
+          const daysDiff = after
+            .startOf('day')
+            .diff(before.startOf('day'), 'day');
+          return `${startTime} ${durationIndicator} ${endTime} (+${daysDiff} ${
+            lang === 'zh' ? '天' : daysDiff > 1 ? 'days' : 'day'
+          })`;
+        }
       }
     }
   };
 
   return (
     <>
-      <span>{formatTime()}</span>
+      <span>{formatDateTime()}</span>
       <sup style={{ fontSize: 10 }}>{formatTimeZone()}</sup>
     </>
   );

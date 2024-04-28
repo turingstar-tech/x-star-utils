@@ -6,8 +6,49 @@ describe('formatDate', () => {
   const mockDate = '2023-08-15T12:00:00Z';
 
   test('should render single date with time', () => {
-    const { container } = render(formatDate(mockDate, { lang: 'en' }));
-    expect(container.textContent).toBe('Aug 15, 2023, 08:00 PMUTC+8');
+    const { container } = render(
+      formatDate(mockDate, { lang: 'en', showSecond: true }),
+    );
+    expect(container.textContent).toBe('Aug 15, 2023, 08:00:00 PMUTC+8');
+  });
+
+  test('should render without date', () => {
+    const { container, rerender } = render(
+      formatDate(mockDate, { lang: 'en', showDate: false }),
+    );
+    expect(container.textContent).toBe('08:00 PMUTC+8');
+
+    rerender(
+      formatDate([mockDate, '2023-08-15T14:00:00Z'], {
+        lang: 'en',
+        showDate: false,
+      }),
+    );
+    expect(container.textContent).toBe('08:00 PM - 10:00 PMUTC+8');
+
+    rerender(
+      formatDate([mockDate, '2023-08-16T14:00:00Z'], {
+        lang: 'zh',
+        showDate: false,
+      }),
+    );
+    expect(container.textContent).toBe('20:00 - 22:00 (+1 天)UTC+8');
+
+    rerender(
+      formatDate([mockDate, '2023-08-16T14:00:00Z'], {
+        lang: 'en',
+        showDate: false,
+      }),
+    );
+    expect(container.textContent).toBe('08:00 PM - 10:00 PM (+1 day)UTC+8');
+
+    rerender(
+      formatDate([mockDate, '2023-08-17T14:00:00Z'], {
+        lang: 'en',
+        showDate: false,
+      }),
+    );
+    expect(container.textContent).toBe('08:00 PM - 10:00 PM (+2 days)UTC+8');
   });
 
   test('should handle date range on the same day', () => {
@@ -21,10 +62,13 @@ describe('formatDate', () => {
 
   test('should handle date range on different days', () => {
     const { container } = render(
-      formatDate([mockDate, '2023-08-16T11:00:00Z'], { lang: 'en' }),
+      formatDate([mockDate, '2023-08-16T11:00:00Z'], {
+        lang: 'en',
+        durationIndicator: '~',
+      }),
     );
     expect(container.textContent).toBe(
-      'Aug 15, 2023, 08:00 PM - Aug 16, 2023, 07:00 PMUTC+8',
+      'Aug 15, 2023, 08:00 PM ~ Aug 16, 2023, 07:00 PMUTC+8',
     );
   });
 

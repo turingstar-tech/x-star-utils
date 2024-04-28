@@ -28,6 +28,31 @@ export default () => {
           timeZone: 'America/New_York',
           lang,
           separator: '-',
+          durationIndicator: '~',
+          showSecond: true,
+        })}
+      </div>
+      <div>
+        {formatDate([1714289899000, 1714300699000], {
+          timeZone: 'America/New_York',
+          lang,
+          separator: '-',
+          showDate: false,
+        })}
+      </div>
+      <div>
+        {formatDate([1714316400000, 1714323600000], {
+          lang,
+          separator: '-',
+          showDate: false,
+        })}
+      </div>
+      <div>
+        {formatDate(1714289899000, {
+          timeZone: 'America/New_York',
+          lang,
+          separator: '-',
+          showDate: false,
         })}
       </div>
     </>
