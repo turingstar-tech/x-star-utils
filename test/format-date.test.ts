@@ -6,8 +6,10 @@ describe('formatDate', () => {
   const mockDate = '2023-08-15T12:00:00Z';
 
   test('should render single date with time', () => {
-    const { container } = render(formatDate(mockDate, { lang: 'en' }));
-    expect(container.textContent).toBe('Aug 15, 2023, 08:00 PMUTC+8');
+    const { container } = render(
+      formatDate(mockDate, { lang: 'en', showSecond: true }),
+    );
+    expect(container.textContent).toBe('Aug 15, 2023, 08:00:00 PMUTC+8');
   });
 
   test('should handle date range on the same day', () => {
