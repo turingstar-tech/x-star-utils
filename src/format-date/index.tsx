@@ -150,9 +150,9 @@ const formatDate = (
           const daysDiff = after
             .startOf('day')
             .diff(before.startOf('day'), 'day');
-          return `${startTime} ${durationIndicator} (+${daysDiff} ${
+          return `${startTime} ${durationIndicator} ${endTime} (+${daysDiff} ${
             lang === 'zh' ? '天' : daysDiff > 1 ? 'days' : 'day'
-          }) ${endTime}`;
+          })`;
         }
       }
     }

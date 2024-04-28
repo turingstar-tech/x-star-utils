@@ -32,7 +32,7 @@ describe('formatDate', () => {
         showDate: false,
       }),
     );
-    expect(container.textContent).toBe('20:00 - (+1 天) 22:00UTC+8');
+    expect(container.textContent).toBe('20:00 - 22:00 (+1 天)UTC+8');
 
     rerender(
       formatDate([mockDate, '2023-08-16T14:00:00Z'], {
@@ -40,7 +40,7 @@ describe('formatDate', () => {
         showDate: false,
       }),
     );
-    expect(container.textContent).toBe('08:00 PM - (+1 day) 10:00 PMUTC+8');
+    expect(container.textContent).toBe('08:00 PM - 10:00 PM (+1 day)UTC+8');
 
     rerender(
       formatDate([mockDate, '2023-08-17T14:00:00Z'], {
@@ -48,7 +48,7 @@ describe('formatDate', () => {
         showDate: false,
       }),
     );
-    expect(container.textContent).toBe('08:00 PM - (+2 days) 10:00 PMUTC+8');
+    expect(container.textContent).toBe('08:00 PM - 10:00 PM (+2 days)UTC+8');
   });
 
   test('should handle date range on the same day', () => {
