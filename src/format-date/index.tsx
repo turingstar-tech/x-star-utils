@@ -50,6 +50,11 @@ export interface FormatDateOptions {
    * 中文环境下年月日分隔符
    */
   separator?: string;
+
+  /**
+   * 中文环境下年月日分隔符
+   */
+  showSecond?: boolean;
 }
 
 /**
@@ -68,6 +73,7 @@ const formatDate = (
     timeZone = dayjs.tz.guess(),
     lang = 'zh',
     separator,
+    showSecond = false,
   }: FormatDateOptions = {},
 ) => {
   const dateRange = (Array.isArray(date) ? date : [date]).map((date) =>
@@ -80,8 +86,8 @@ const formatDate = (
   }[lang];
 
   const formatTimeString = {
-    zh: 'HH:mm',
-    en: 'hh:mm A',
+    zh: `HH:mm${showSecond ? ':ss' : ''}`,
+    en: `hh:mm${showSecond ? ':ss' : ''} A`,
   }[lang];
 
   const isInUS = () =>

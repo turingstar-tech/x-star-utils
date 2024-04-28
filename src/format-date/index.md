@@ -28,6 +28,7 @@ export default () => {
           timeZone: 'America/New_York',
           lang,
           separator: '-',
+          showSecond: true,
         })}
       </div>
     </>
