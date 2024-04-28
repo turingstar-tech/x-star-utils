@@ -129,11 +129,18 @@ const formatDate = (
       const startTime = before.format(formatTimeTemplate);
       const endDate = after.format(formatDateTemplate);
       const endTime = after.format(formatTimeTemplate);
+      const daysDiff = dayjs(dateRange[1])
+        .startOf('day')
+        .diff(dayjs(dateRange[0]).startOf('day'), 'd');
       return startDate === endDate
         ? showDate
           ? `${startDate} ${startTime} - ${endTime}`
           : `${startTime} - ${endTime}`
-        : `${startDate} ${startTime} - ${endDate} ${endTime}`;
+        : showDate
+        ? `${startDate} ${startTime} - ${endDate} ${endTime}`
+        : `${startTime} - (+${daysDiff} ${
+            lang === 'en' ? (daysDiff > 1 ? 'days' : 'day') : '天'
+          }) ${endTime}`;
     }
   };
 
