@@ -1,4 +1,4 @@
-import { describe, expect, jest, test } from '@jest/globals';
+import { describe, expect, test } from '@jest/globals';
 import { render } from '@testing-library/react';
 import formatDate from '../src/format-date';
 
@@ -38,21 +38,27 @@ describe('formatDate', () => {
   });
 
   test('should show Chinese formatting and UTC offset', () => {
-    jest
-      .spyOn(Intl.DateTimeFormat.prototype, 'resolvedOptions')
-      .mockReturnValue({ timeZone: 'America/New_York' } as any);
-
-    const { container } = render(formatDate(mockDate, { separator: '/' }));
+    const { container } = render(
+      formatDate(mockDate, { timeZone: 'America/New_York', separator: '/' }),
+    );
     expect(container.textContent).toBe('2023/08/15 08:00UTC-4');
   });
 
   test('should render daylight time zone in New York', () => {
     const { container, rerender } = render(
-      formatDate('2023-08-15T12:00:00Z', { lang: 'en' }),
+      formatDate('2023-08-15T12:00:00Z', {
+        timeZone: 'America/New_York',
+        lang: 'en',
+      }),
     );
     expect(container.textContent).toBe('Aug 15, 2023, 08:00 AMEDT');
 
-    rerender(formatDate('2023-02-15T12:00:00Z', { lang: 'en' }));
+    rerender(
+      formatDate('2023-02-15T12:00:00Z', {
+        timeZone: 'America/New_York',
+        lang: 'en',
+      }),
+    );
     expect(container.textContent).toBe('Feb 15, 2023, 07:00 AMEST');
   });
 });

@@ -21,9 +21,11 @@ export default () => {
       <button onClick={() => setLang(lang === 'zh' ? 'en' : 'zh')}>
         {'切换语言'}
       </button>
-      <div>{formatDate(new Date(), { lang, separator: '-' })}</div>
+      <div>{formatDate(undefined, { lang })}</div>
+      <div>{formatDate('2024-04-28T01:15:00Z', { lang, separator: '/' })}</div>
       <div>
         {formatDate([1713922083000, 1714008483000], {
+          timeZone: 'America/New_York',
           lang,
           separator: '-',
         })}
