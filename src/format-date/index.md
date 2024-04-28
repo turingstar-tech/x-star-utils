@@ -28,7 +28,7 @@ export default () => {
           timeZone: 'America/New_York',
           lang,
           separator: '-',
-          dateRangeSeparator: '~',
+          durationIndicator: '~',
           showSecond: true,
         })}
       </div>

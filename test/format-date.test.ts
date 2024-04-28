@@ -62,10 +62,13 @@ describe('formatDate', () => {
 
   test('should handle date range on different days', () => {
     const { container } = render(
-      formatDate([mockDate, '2023-08-16T11:00:00Z'], { lang: 'en' }),
+      formatDate([mockDate, '2023-08-16T11:00:00Z'], {
+        lang: 'en',
+        durationIndicator: '~',
+      }),
     );
     expect(container.textContent).toBe(
-      'Aug 15, 2023, 08:00 PM - Aug 16, 2023, 07:00 PMUTC+8',
+      'Aug 15, 2023, 08:00 PM ~ Aug 16, 2023, 07:00 PMUTC+8',
     );
   });
 

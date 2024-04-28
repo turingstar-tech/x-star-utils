@@ -54,17 +54,17 @@ export interface FormatDateOptions {
   /**
    * 日期范围的分隔符
    */
-  dateRangeSeparator?: string;
+  durationIndicator?: string;
 
   /**
-   * 是否显示到秒
-   */
-  showSecond?: boolean;
-
-  /**
-   * 当非跨天时间段是否显示日期
+   * 是否显示日期
    */
   showDate?: boolean;
+
+  /**
+   * 是否显示秒
+   */
+  showSecond?: boolean;
 }
 
 /**
@@ -83,9 +83,9 @@ const formatDate = (
     timeZone = dayjs.tz.guess(),
     lang = 'zh',
     separator,
-    dateRangeSeparator = '-',
-    showSecond = false,
+    durationIndicator = '-',
     showDate = true,
+    showSecond = false,
   }: FormatDateOptions = {},
 ) => {
   const dateRange = (Array.isArray(date) ? date : [date]).map((date) =>
@@ -135,18 +135,26 @@ const formatDate = (
       const startTime = before.format(formatTimeTemplate);
       const endDate = after.format(formatDateTemplate);
       const endTime = after.format(formatTimeTemplate);
-      const daysDiff = dayjs(dateRange[1])
-        .startOf('day')
-        .diff(dayjs(dateRange[0]).startOf('day'), 'd');
-      return startDate === endDate
-        ? showDate
-          ? `${startDate} ${startTime} - ${endTime}`
-          : `${startTime} - ${endTime}`
-        : showDate
-        ? `${startDate} ${startTime} ${dateRangeSeparator} ${endDate} ${endTime}`
-        : `${startTime} - (+${daysDiff} ${
-            lang === 'en' ? (daysDiff > 1 ? 'days' : 'day') : '天'
+      if (startDate === endDate) {
+        // 在同一天
+        if (showDate) {
+          return `${startDate} ${startTime} ${durationIndicator} ${endTime}`;
+        } else {
+          return `${startTime} ${durationIndicator} ${endTime}`;
+        }
+      } else {
+        // 不在同一天
+        if (showDate) {
+          return `${startDate} ${startTime} ${durationIndicator} ${endDate} ${endTime}`;
+        } else {
+          const daysDiff = after
+            .startOf('day')
+            .diff(before.startOf('day'), 'day');
+          return `${startTime} ${durationIndicator} (+${daysDiff} ${
+            lang === 'zh' ? '天' : daysDiff > 1 ? 'days' : 'day'
           }) ${endTime}`;
+        }
+      }
     }
   };
 
