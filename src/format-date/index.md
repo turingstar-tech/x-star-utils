@@ -59,3 +59,39 @@ export default () => {
   );
 };
 ```
+
+## API
+
+```ts
+interface FormatDateOptions {
+  /**
+   * 时区
+   */
+  timeZone?: string;
+
+  /**
+   * 语言
+   */
+  lang?: 'zh' | 'en';
+
+  /**
+   * 中文环境下日期格式分隔符
+   */
+  separator?: string;
+
+  /**
+   * 时间范围指示符
+   */
+  durationIndicator?: string;
+
+  /**
+   * 是否显示日期
+   */
+  showDate?: boolean;
+
+  /**
+   * 是否显示秒
+   */
+  showSecond?: boolean;
+}
+```

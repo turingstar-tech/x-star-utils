@@ -1,5 +1,12 @@
 import React, { Suspense, lazy } from 'react';
 
+/**
+ * 用 `React.Suspense` 包装的 `React.lazy`
+ *
+ * @param factory 加载函数
+ * @param fallback 加载占位符
+ * @returns 懒加载组件
+ */
 const wrappedLazy = <T extends React.ComponentType<any>>(
   factory: () => Promise<{ default: T }>,
   fallback: React.ReactNode = <div>Loading...</div>,

@@ -47,12 +47,12 @@ export interface FormatDateOptions {
   lang?: 'zh' | 'en';
 
   /**
-   * 中文环境下年月日分隔符
+   * 中文环境下日期格式分隔符
    */
   separator?: string;
 
   /**
-   * 日期范围的分隔符
+   * 时间范围指示符
    */
   durationIndicator?: string;
 
@@ -137,23 +137,19 @@ const formatDate = (
       const endTime = after.format(formatTimeTemplate);
       if (startDate === endDate) {
         // 在同一天
-        if (showDate) {
-          return `${startDate} ${startTime} ${durationIndicator} ${endTime}`;
-        } else {
-          return `${startTime} ${durationIndicator} ${endTime}`;
-        }
+        return showDate
+          ? `${startDate} ${startTime} ${durationIndicator} ${endTime}`
+          : `${startTime} ${durationIndicator} ${endTime}`;
       } else {
         // 不在同一天
-        if (showDate) {
-          return `${startDate} ${startTime} ${durationIndicator} ${endDate} ${endTime}`;
-        } else {
-          const daysDiff = after
-            .startOf('day')
-            .diff(before.startOf('day'), 'day');
-          return `${startTime} ${durationIndicator} ${endTime} (+${daysDiff} ${
-            lang === 'zh' ? '天' : daysDiff > 1 ? 'days' : 'day'
-          })`;
-        }
+        const daysDiff = after
+          .startOf('day')
+          .diff(before.startOf('day'), 'day');
+        return showDate
+          ? `${startDate} ${startTime} ${durationIndicator} ${endDate} ${endTime}`
+          : `${startTime} ${durationIndicator} ${endTime} (+${daysDiff} ${
+              lang === 'zh' ? '天' : daysDiff > 1 ? 'days' : 'day'
+            })`;
       }
     }
   };
