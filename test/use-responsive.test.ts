@@ -4,7 +4,7 @@ import useResponsive from '../src/use-responsive';
 
 jest.useFakeTimers();
 
-let targetQuery = '(max-width: 575px)';
+let targetQuery = '(max-width: 575.98px)';
 
 // 模拟 matchMedia 方法
 Object.defineProperty(window, 'matchMedia', {
@@ -20,10 +20,10 @@ Object.defineProperty(window, 'matchMedia', {
 
 describe('useResponsive test', () => {
   afterEach(() => {
-    targetQuery = '(max-width: 575px)';
+    targetQuery = '(max-width: 575.98px)';
   });
 
-  // 测试 xs | sm | md | lg | xl | xxl | mb | iPad | pc
+  // 测试 xs | sm | md | lg | xl | xxl | phone | tablet | desktop
   test('success test for xs', async () => {
     const { result } = renderHook(() => useResponsive('xs'));
 
@@ -60,20 +60,20 @@ describe('useResponsive test', () => {
     expect(result.current).toBe(false);
   });
 
-  test('success test for mb', () => {
-    const { result } = renderHook(() => useResponsive('mb'));
+  test('success test for phone', () => {
+    const { result } = renderHook(() => useResponsive('phone'));
 
     expect(result.current).toBe(true);
   });
 
-  test('success test for iPad', () => {
-    const { result } = renderHook(() => useResponsive('iPad'));
+  test('success test for tablet', () => {
+    const { result } = renderHook(() => useResponsive('tablet'));
 
     expect(result.current).toBe(false);
   });
 
-  test('success test for pc', () => {
-    const { result } = renderHook(() => useResponsive('pc'));
+  test('success test for desktop', () => {
+    const { result } = renderHook(() => useResponsive('desktop'));
 
     expect(result.current).toBe(false);
   });
