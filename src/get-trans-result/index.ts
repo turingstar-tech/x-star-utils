@@ -10,6 +10,6 @@ const getTransResult = (
   lang: 'zh' | 'en',
   zhText: string | undefined,
   enText: string | undefined,
-) => (lang === 'zh' ? zhText ?? enText : enText ?? zhText) ?? '';
+) => (lang === 'zh' ? zhText || enText : enText || zhText) ?? '';
 
 export default getTransResult;
