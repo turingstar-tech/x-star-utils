@@ -1,3 +1,4 @@
+export { default as awsMultipartUpload } from './aws-multipart-upload';
 export { default as convertUploadFileToBase64 } from './convert-upload-file-to-base64';
 export { default as downloadFileFromBase64 } from './download-file-from-base64';
 export { default as downloadTextFile } from './download-text-file';
