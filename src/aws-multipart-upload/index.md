@@ -2,9 +2,10 @@
 
 ```
 /**
- * aws分片上传文件并返回进度
- * @param param0
- * @returns
+ * AWS 分片上传文件并返回进度
+ *
+ * @param options 上传选项
+ * @returns 上传结果
  */
 ```
 
@@ -15,17 +16,17 @@ export default () => {
   return (
     <>
       <input
-        type={'file'}
+        type="file"
         onChange={async (e) => {
           const selectedFile = e.target.files[0];
           await awsMultipartUpload({
             clientConfig: {
-              region: 'cn-northwest-1',
-              accessKeyId: '',
-              secretAccessKey: '',
-              sessionToken: '',
+              region: 'region',
+              accessKeyId: 'access-key-id',
+              secretAccessKey: 'secret-access-key',
+              sessionToken: 'session-token',
             },
-            bucketName: 'x',
+            bucketName: 'bucket-name',
             key: selectedFile.name,
             file: selectedFile,
           });
