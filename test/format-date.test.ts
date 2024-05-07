@@ -7,9 +7,13 @@ describe('formatDate', () => {
 
   test('should render single date with time', () => {
     const { container } = render(
-      formatDate(mockDate, { lang: 'en', showSecond: true }),
+      formatDate(mockDate, {
+        lang: 'en',
+        showDayOfWeek: true,
+        showSecond: true,
+      }),
     );
-    expect(container.textContent).toBe('Aug 15, 2023, 08:00:00 PMUTC+8');
+    expect(container.textContent).toBe('Tue, Aug 15, 2023, 08:00:00 PMUTC+8');
   });
 
   test('should render without date', () => {
@@ -21,10 +25,11 @@ describe('formatDate', () => {
     rerender(
       formatDate([mockDate, '2023-08-15T14:00:00Z'], {
         lang: 'en',
+        durationIndicator: '~',
         showDate: false,
       }),
     );
-    expect(container.textContent).toBe('08:00 PM - 10:00 PMUTC+8');
+    expect(container.textContent).toBe('08:00 PM ~ 10:00 PMUTC+8');
 
     rerender(
       formatDate([mockDate, '2023-08-16T14:00:00Z'], {
@@ -45,18 +50,22 @@ describe('formatDate', () => {
     rerender(
       formatDate([mockDate, '2023-08-17T14:00:00Z'], {
         lang: 'en',
+        durationIndicator: '~',
         showDate: false,
       }),
     );
-    expect(container.textContent).toBe('08:00 PM - 10:00 PM (+2 days)UTC+8');
+    expect(container.textContent).toBe('08:00 PM ~ 10:00 PM (+2 days)UTC+8');
   });
 
   test('should handle date range on the same day', () => {
     const { container } = render(
-      formatDate([mockDate, '2023-08-15T15:30:00Z'], { lang: 'en' }),
+      formatDate([mockDate, '2023-08-15T15:30:00Z'], {
+        lang: 'en',
+        durationIndicator: '~',
+      }),
     );
     expect(container.textContent).toBe(
-      'Aug 15, 2023, 08:00 PM - 11:30 PMUTC+8',
+      'Aug 15, 2023, 08:00 PM ~ 11:30 PMUTC+8',
     );
   });
 
@@ -83,9 +92,14 @@ describe('formatDate', () => {
 
   test('should show Chinese formatting and UTC offset', () => {
     const { container } = render(
-      formatDate(mockDate, { timeZone: 'America/New_York', separator: '/' }),
+      formatDate(mockDate, {
+        timeZone: 'America/New_York',
+        separator: '/',
+        showDayOfWeek: true,
+        showSecond: true,
+      }),
     );
-    expect(container.textContent).toBe('2023/08/15 08:00UTC-4');
+    expect(container.textContent).toBe('2023/08/15 周二 08:00:00UTC-4');
   });
 
   test('should render daylight time zone in New York', () => {
