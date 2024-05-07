@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import React from 'react';
@@ -62,6 +63,11 @@ export interface FormatDateOptions {
   showDate?: boolean;
 
   /**
+   * 是否显示星期几
+   */
+  showDayOfWeek?: boolean;
+
+  /**
    * 是否显示秒
    */
   showSecond?: boolean;
@@ -85,11 +91,14 @@ const formatDate = (
     separator,
     durationIndicator = '-',
     showDate = true,
+    showDayOfWeek = false,
     showSecond = false,
   }: FormatDateOptions = {},
 ) => {
   const dateRange = (Array.isArray(date) ? date : [date]).map((date) =>
-    dayjs(date).tz(timeZone),
+    dayjs(date)
+      .tz(timeZone)
+      .locale(lang === 'zh' ? 'zh-cn' : 'en'),
   );
 
   const isInUS = () =>
@@ -111,15 +120,17 @@ const formatDate = (
     }
   };
 
-  const formatDateTemplate = {
-    zh: separator ? `YYYY${separator}MM${separator}DD` : 'YYYY年MM月DD日',
-    en: 'MMM DD, YYYY,',
-  }[lang];
+  const formatDateTemplate =
+    lang === 'zh'
+      ? `${separator ? `YYYY${separator}MM${separator}DD` : 'YYYY年MM月DD日'}${
+          showDayOfWeek ? ' ddd' : ''
+        }`
+      : `${showDayOfWeek ? 'ddd, ' : ''}MMM DD, YYYY,`;
 
-  const formatTimeTemplate = {
-    zh: `HH:mm${showSecond ? ':ss' : ''}`,
-    en: `hh:mm${showSecond ? ':ss' : ''} A`,
-  }[lang];
+  const formatTimeTemplate =
+    lang === 'zh'
+      ? `HH:mm${showSecond ? ':ss' : ''}`
+      : `hh:mm${showSecond ? ':ss' : ''} A`;
 
   const formatDateTime = () => {
     if (dateRange.length === 1) {
