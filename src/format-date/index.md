@@ -96,6 +96,11 @@ interface FormatDateOptions {
   showDate?: boolean;
 
   /**
+   * 是否显示星期几
+   */
+  showDayOfWeek?: boolean;
+
+  /**
    * 是否显示秒
    */
   showSecond?: boolean;
