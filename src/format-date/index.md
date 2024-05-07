@@ -31,33 +31,34 @@ export default () => {
         })}
       </div>
       <div>
+        {formatDate(['2024-04-28T01:15:00Z', '2024-04-28T13:15:00Z'], {
+          lang,
+          showSecond: true,
+        })}
+      </div>
+      <div>
         {formatDate([1713922083000, 1714008483000], {
           timeZone: 'America/New_York',
           lang,
           separator: '-',
           durationIndicator: '~',
+          showDayOfWeek: true,
         })}
       </div>
       <div>
         {formatDate([1714289899000, 1714300699000], {
           timeZone: 'America/New_York',
           lang,
-          separator: '-',
           showDate: false,
         })}
       </div>
       <div>
-        {formatDate([1714316400000, 1714323600000], {
-          lang,
-          separator: '-',
-          showDate: false,
-        })}
+        {formatDate([1714316400000, 1714323600000], { lang, showDate: false })}
       </div>
       <div>
         {formatDate(1714289899000, {
           timeZone: 'America/New_York',
           lang,
-          separator: '-',
           showDate: false,
         })}
       </div>
