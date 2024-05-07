@@ -10,7 +10,7 @@ import {
   UploadPartCommand,
 } from '@aws-sdk/client-s3';
 
-interface AwsMultipartUploadOptions {
+export interface AWSMultipartUploadOptions {
   /**
    * Client 配置
    */
@@ -61,7 +61,7 @@ const awsMultipartUpload = async ({
   file,
   partSize = 5,
   onProgress,
-}: AwsMultipartUploadOptions) => {
+}: AWSMultipartUploadOptions) => {
   let uploadId;
   const s3Client = new S3Client(clientConfig);
   try {

@@ -42,7 +42,7 @@ export default () => {
 ## API
 
 ```ts
-interface AwsMultipartUploadOptions {
+interface AWSMultipartUploadOptions {
   /**
    * Client 配置
    */

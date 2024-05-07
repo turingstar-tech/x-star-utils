@@ -8,7 +8,7 @@ import isDST from '../is-dst';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-export enum StandardTimeZone {
+enum StandardTimeZone {
   PacificStandardTime = -8, // North America
   MountainStandardTime = -7, // North America
   CentralStandardTime = -6, // North America  Central America
@@ -22,7 +22,7 @@ const standardTimeZoneMap: Record<number, string> = {
   [StandardTimeZone.EasternStandardTime]: 'EST',
 };
 
-export enum DaylightTimeZone {
+enum DaylightTimeZone {
   PacificDaylightTime = -7, // North America
   MountainDaylightTime = -6, // North America
   CentralDaylightTime = -5, // North America  Central America
