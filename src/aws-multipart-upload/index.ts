@@ -1,3 +1,7 @@
+import type {
+  CreateMultipartUploadCommandInput,
+  S3ClientConfig,
+} from '@aws-sdk/client-s3';
 import {
   AbortMultipartUploadCommand,
   CompleteMultipartUploadCommand,
@@ -7,13 +11,9 @@ import {
 } from '@aws-sdk/client-s3';
 
 interface AwsMultipartUploadOptions {
-  clientConfig: {
-    region: string;
-    accessKeyId: string;
-    secretAccessKey: string;
-    sessionToken: string;
-  }; // client 相关配置
-  bucketName: string; // 后端给的桶名
+  clientConfig: S3ClientConfig; // client 配置
+  createConfig?: CreateMultipartUploadCommandInput; // 上传配置
+  bucket: string; // 后端给的桶名
   key: string; // 一般是文件名
   file: File | Blob;
   partSize?: number; // 最小 5MB 分段大小，默认为 5MB
@@ -28,25 +28,20 @@ interface AwsMultipartUploadOptions {
  */
 const awsMultipartUpload = async ({
   clientConfig,
-  bucketName,
+  createConfig,
+  bucket,
   key,
   file,
   partSize = 5,
   onProgress,
 }: AwsMultipartUploadOptions) => {
   let uploadId;
-  const s3Client = new S3Client({
-    region: clientConfig.region,
-    credentials: {
-      accessKeyId: clientConfig.accessKeyId,
-      secretAccessKey: clientConfig.secretAccessKey,
-      sessionToken: clientConfig.sessionToken,
-    },
-  });
+  const s3Client = new S3Client(clientConfig);
   try {
     const multipartUpload = await s3Client.send(
       new CreateMultipartUploadCommand({
-        Bucket: bucketName,
+        ...createConfig,
+        Bucket: bucket,
         Key: key,
       }),
     );
@@ -65,7 +60,7 @@ const awsMultipartUpload = async ({
         s3Client
           .send(
             new UploadPartCommand({
-              Bucket: bucketName,
+              Bucket: bucket,
               Key: key,
               UploadId: uploadId,
               Body: file.slice(start, end),
@@ -84,7 +79,7 @@ const awsMultipartUpload = async ({
     const uploadResults = await Promise.all(uploadPromises);
     const res = await s3Client.send(
       new CompleteMultipartUploadCommand({
-        Bucket: bucketName,
+        Bucket: bucket,
         Key: key,
         UploadId: uploadId,
         MultipartUpload: {
@@ -99,13 +94,15 @@ const awsMultipartUpload = async ({
   } catch (error) {
     // 出现错误终止上传
     if (uploadId) {
-      const abortCommand = new AbortMultipartUploadCommand({
-        Bucket: bucketName,
-        Key: key,
-        UploadId: uploadId,
-      });
-      await s3Client.send(abortCommand);
+      await s3Client.send(
+        new AbortMultipartUploadCommand({
+          Bucket: bucket,
+          Key: key,
+          UploadId: uploadId,
+        }),
+      );
     }
   }
 };
+
 export default awsMultipartUpload;
