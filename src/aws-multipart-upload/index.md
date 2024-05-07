@@ -18,15 +18,17 @@ export default () => {
       <input
         type="file"
         onChange={async (e) => {
-          const selectedFile = e.target.files[0];
+          const selectedFile = e.target.files![0];
           await awsMultipartUpload({
             clientConfig: {
               region: 'region',
-              accessKeyId: 'access-key-id',
-              secretAccessKey: 'secret-access-key',
-              sessionToken: 'session-token',
+              credentials: {
+                accessKeyId: 'access-key-id',
+                secretAccessKey: 'secret-access-key',
+                sessionToken: 'session-token',
+              },
             },
-            bucketName: 'bucket-name',
+            bucket: 'bucket-name',
             key: selectedFile.name,
             file: selectedFile,
           });
@@ -35,4 +37,45 @@ export default () => {
     </>
   );
 };
+```
+
+## API
+
+```ts
+interface AwsMultipartUploadOptions {
+  /**
+   * Client 配置
+   */
+  clientConfig: S3ClientConfig;
+
+  /**
+   * 创建上传配置
+   */
+  createConfig?: Omit<CreateMultipartUploadCommandInput, 'Bucket' | 'Key'>;
+
+  /**
+   * 后端给的桶名
+   */
+  bucket: string;
+
+  /**
+   * 文件标识，一般是文件名
+   */
+  key: string;
+
+  /**
+   * 文件
+   */
+  file: File | Blob;
+
+  /**
+   * 分段大小，最小 5MB，默认 5MB
+   */
+  partSize?: number;
+
+  /**
+   * 上传进度回调函数
+   */
+  onProgress?: (progress: number) => void;
+}
 ```
