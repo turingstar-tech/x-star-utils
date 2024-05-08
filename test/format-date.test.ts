@@ -6,7 +6,7 @@ describe('formatDate', () => {
   const mockDate = '2023-08-15T12:00:00Z';
 
   test('should render single date with time', () => {
-    const { container } = render(
+    const { container, rerender } = render(
       formatDate(mockDate, {
         lang: 'en',
         showDayOfWeek: true,
@@ -14,6 +14,38 @@ describe('formatDate', () => {
       }),
     );
     expect(container.textContent).toBe('Tue, Aug 15, 2023, 08:00:00 PMUTC+8');
+
+    rerender(
+      formatDate(mockDate, {
+        lang: 'en',
+        showDayOfWeek: true,
+        showSecond: true,
+        showDate: false,
+      }),
+    );
+    expect(container.textContent).toBe('Tue, 08:00:00 PMUTC+8');
+
+    rerender(
+      formatDate([mockDate, '2023-08-15T14:00:00Z'], {
+        lang: 'en',
+        showDayOfWeek: true,
+        showSecond: true,
+        showDate: false,
+      }),
+    );
+    expect(container.textContent).toBe('Tue, 08:00:00 PM - 10:00:00 PMUTC+8');
+
+    rerender(
+      formatDate([mockDate, '2023-08-18T14:00:00Z'], {
+        lang: 'en',
+        showDayOfWeek: true,
+        showSecond: true,
+        showDate: false,
+      }),
+    );
+    expect(container.textContent).toBe(
+      'Tue, 08:00:00 PM - Fri, 10:00:00 PM (+3 days)UTC+8',
+    );
   });
 
   test('should render without date', () => {

@@ -136,16 +136,28 @@ const formatDate = (
     if (dateRange.length === 1) {
       // 只有一个时间，不存在时间范围
       const baseDate = dateRange[0].format(formatDateTemplate);
-      const baseTime = dateRange[0].format(formatTimeTemplate);
+      const baseTime = dateRange[0].format(
+        !showDate && showDayOfWeek
+          ? 'ddd, ' + formatTimeTemplate
+          : formatTimeTemplate,
+      );
       return showDate ? `${baseDate} ${baseTime}` : baseTime;
     } else {
       const [before, after] = dateRange[0].isBefore(dateRange[1])
         ? [dateRange[0], dateRange[1]]
         : [dateRange[1], dateRange[0]];
       const startDate = before.format(formatDateTemplate);
-      const startTime = before.format(formatTimeTemplate);
+      const startTime = before.format(
+        !showDate && showDayOfWeek
+          ? 'ddd, ' + formatTimeTemplate
+          : formatTimeTemplate,
+      );
       const endDate = after.format(formatDateTemplate);
-      const endTime = after.format(formatTimeTemplate);
+      const endTime = after.format(
+        !showDate && showDayOfWeek && startDate !== endDate
+          ? 'ddd, ' + formatTimeTemplate
+          : formatTimeTemplate,
+      );
       if (startDate === endDate) {
         // 在同一天
         return showDate
