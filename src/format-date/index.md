@@ -31,6 +31,30 @@ export default () => {
         })}
       </div>
       <div>
+        {formatDate('2024-04-28T01:15:00Z', {
+          lang,
+          showDayOfWeek: true,
+          showSecond: true,
+          showDate: false,
+        })}
+      </div>
+      <div>
+        {formatDate(['2024-04-28T01:15:00Z', '2024-04-28T03:15:00Z'], {
+          lang,
+          showDayOfWeek: true,
+          showSecond: true,
+          showDate: false,
+        })}
+      </div>
+      <div>
+        {formatDate(['2024-04-28T01:15:00Z', '2024-04-29T03:15:00Z'], {
+          lang,
+          showDayOfWeek: true,
+          showSecond: true,
+          showDate: false,
+        })}
+      </div>
+      <div>
         {formatDate(['2024-04-28T01:15:00Z', '2024-04-28T13:15:00Z'], {
           lang,
           showSecond: true,
