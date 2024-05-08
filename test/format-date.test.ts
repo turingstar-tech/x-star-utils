@@ -44,7 +44,7 @@ describe('formatDate', () => {
       }),
     );
     expect(container.textContent).toBe(
-      'Tue, 08:00:00 PM - Fri, 10:00:00 PM (+3 days)UTC+8',
+      'Tue, 08:00:00 PM - Fri, 10:00:00 PMUTC+8',
     );
   });
 

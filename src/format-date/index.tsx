@@ -120,47 +120,37 @@ const formatDate = (
     }
   };
 
-  const formatDateTemplate =
-    lang === 'zh'
+  const formatDateTemplate = {
+    zh: showDate
       ? `${separator ? `YYYY${separator}MM${separator}DD` : 'YYYY年MM月DD日'}${
           showDayOfWeek ? ' ddd' : ''
         }`
-      : `${showDayOfWeek ? 'ddd, ' : ''}MMM DD, YYYY,`;
+      : 'ddd',
+    en: showDate ? `${showDayOfWeek ? 'ddd, ' : ''}MMM DD, YYYY,` : 'ddd,',
+  }[lang];
 
-  const formatTimeTemplate =
-    lang === 'zh'
-      ? `HH:mm${showSecond ? ':ss' : ''}`
-      : `hh:mm${showSecond ? ':ss' : ''} A`;
+  const formatTimeTemplate = {
+    zh: `HH:mm${showSecond ? ':ss' : ''}`,
+    en: `hh:mm${showSecond ? ':ss' : ''} A`,
+  }[lang];
 
   const formatDateTime = () => {
     if (dateRange.length === 1) {
       // 只有一个时间，不存在时间范围
       const baseDate = dateRange[0].format(formatDateTemplate);
-      const baseTime = dateRange[0].format(
-        !showDate && showDayOfWeek
-          ? 'ddd, ' + formatTimeTemplate
-          : formatTimeTemplate,
-      );
-      return showDate ? `${baseDate} ${baseTime}` : baseTime;
+      const baseTime = dateRange[0].format(formatTimeTemplate);
+      return showDate || showDayOfWeek ? `${baseDate} ${baseTime}` : baseTime;
     } else {
       const [before, after] = dateRange[0].isBefore(dateRange[1])
         ? [dateRange[0], dateRange[1]]
         : [dateRange[1], dateRange[0]];
       const startDate = before.format(formatDateTemplate);
-      const startTime = before.format(
-        !showDate && showDayOfWeek
-          ? 'ddd, ' + formatTimeTemplate
-          : formatTimeTemplate,
-      );
+      const startTime = before.format(formatTimeTemplate);
       const endDate = after.format(formatDateTemplate);
-      const endTime = after.format(
-        !showDate && showDayOfWeek && startDate !== endDate
-          ? 'ddd, ' + formatTimeTemplate
-          : formatTimeTemplate,
-      );
+      const endTime = after.format(formatTimeTemplate);
       if (startDate === endDate) {
         // 在同一天
-        return showDate
+        return showDate || showDayOfWeek
           ? `${startDate} ${startTime} ${durationIndicator} ${endTime}`
           : `${startTime} ${durationIndicator} ${endTime}`;
       } else {
@@ -168,7 +158,7 @@ const formatDate = (
         const daysDiff = after
           .startOf('day')
           .diff(before.startOf('day'), 'day');
-        return showDate
+        return showDate || showDayOfWeek
           ? `${startDate} ${startTime} ${durationIndicator} ${endDate} ${endTime}`
           : `${startTime} ${durationIndicator} ${endTime} (+${daysDiff} ${
               lang === 'zh' ? '天' : daysDiff > 1 ? 'days' : 'day'
