@@ -14,9 +14,8 @@ describe('is-browser-compatibility', () => {
     // 测试兼容的情况
     // 火狐 Firefox 浏览器版本 90.0
     // 谷歌 Chrome 浏览器版本 94.0.4606.81
-    // Opera 浏览器版本 80.0.4170.72
     // Safari 浏览器版本 14.1
-    // WeChat iPhone Browser
+    // WeChat iPhone 浏览器
     mockUserAgent(
       'Mozilla/5.0 (Windows NT 10.0; rv:90.0) Gecko/20100101 Firefox/90.0',
     );
@@ -33,18 +32,23 @@ describe('is-browser-compatibility', () => {
     expect(isBrowserCompatibility()).toBe(true);
 
     mockUserAgent(
+      'mozilla/5.0 (iphone; cpu iphone os 17_1_2 like mac os x) applewebkit/605.1.15 (khtml, like gecko) mobile/15e148 micromessenger/8.0.44(0x18002c2b) nettype/wifi language/zh_cn',
+    );
+    expect(isBrowserCompatibility()).toBe(true);
+
+    mockUserAgent(
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88 Safari/537.36',
     );
     expect(isBrowserCompatibility()).toBe(true);
 
     // 测试不兼容的情况
-    // 兼容性较低的 Internet Explorer (IE) 浏览器版本 8.0
+    // 兼容性较低的 Internet Explorer (IE) 浏览器
     // 兼容性较低的 Firefox 浏览器版本 60.0
     // 兼容性较低的 Chrome 浏览器版本 50.0.2661.102
     // 兼容性较低的 Opera 浏览器版本 80.0.4170.72
     // 兼容性较低的 Safari 浏览器版本 14.0.3
     mockUserAgent(
-      'Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/5.0)',
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Trident/7.0; rv:11.0 like Gecko',
     );
     expect(isBrowserCompatibility()).toBe(false);
 
@@ -68,9 +72,7 @@ describe('is-browser-compatibility', () => {
     );
     expect(isBrowserCompatibility()).toBe(false);
 
-    mockUserAgent(
-      'mozilla/5.0 (iphone; cpu iphone os 17_1_2 like mac os x) applewebkit/605.1.15 (khtml, like gecko) mobile/15e148 micromessenger/8.0.44(0x18002c2b) nettype/wifi language/zh_cn',
-    );
-    expect(isBrowserCompatibility()).toBe(true);
+    mockUserAgent('');
+    expect(isBrowserCompatibility()).toBe(false);
   });
 });
