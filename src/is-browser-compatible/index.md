@@ -1,21 +1,21 @@
-# isBrowserCompatibility
+# isBrowserCompatible
 
 ```
 /**
  * 判断浏览器是否兼容
  *
- * @param minBrowserVersions 最低版本号
- * @returns 是否兼容
+ * @param browserCompatibility 浏览器最低版本号
+ * @returns 当前浏览器是否兼容
  */
 ```
 
 ```jsx
-import { isBrowserCompatibility } from 'x-star-utils';
+import { isBrowserCompatible } from 'x-star-utils';
 
 export default () => {
   return (
     <>
-      {isBrowserCompatibility({
+      {isBrowserCompatible({
         ie: '9999.0',
         firefox: '80.0',
         chrome: '88.0',

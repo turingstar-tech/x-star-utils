@@ -10,7 +10,7 @@ const toChineseNum = (value: number | string) => {
   const chars = '零一二三四五六七八九';
   const units = ['', '十', '百', '千', '万'];
 
-  const num = typeof value === 'number' ? value : parseInt(value);
+  const num = Number(value);
 
   if (num >= 100000) {
     throw new Error('只支持十万以下的数字转换');
