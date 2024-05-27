@@ -90,13 +90,12 @@ export interface BrowserCompatibility {
 const defaultBrowserCompatibility: BrowserCompatibility = {
   chrome: '88.0',
   crios: '88.0',
-  firefox: '80.0',
-  fxios: '80.0',
+  firefox: '85.0',
+  fxios: '32.1',
   safari: '14.1',
-  opera: '80.0',
+  opera: '74.0',
   edge: '88.0',
-  ie: '9999.0',
-  wechat: '8.0',
+  wechat: '6.8',
 };
 
 /**
