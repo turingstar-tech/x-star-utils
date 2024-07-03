@@ -1,6 +1,6 @@
 {
   "name": "x-star-utils",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "description": "A react utils library developed by turingstar",
   "license": "MIT",
   "main": "lib/index.js",
