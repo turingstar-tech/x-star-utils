@@ -86,6 +86,20 @@ export default () => {
           showDate: false,
         })}
       </div>
+      <div>
+        {formatDate(['2024-09-29T00:00:00.000Z', '2024-12-15T02:00:00.000Z'], {
+          lang,
+          showDate: false,
+          showDayOfWeek: true,
+        })}
+      </div>
+      <div>
+        {formatDate(['2024-09-28T22:00:00.000Z', '2024-12-15T00:00:00.000Z'], {
+          lang,
+          showDate: false,
+          showDayOfWeek: true,
+        })}
+      </div>
     </>
   );
 };

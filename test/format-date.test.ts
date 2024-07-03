@@ -150,5 +150,15 @@ describe('formatDate', () => {
       }),
     );
     expect(container.textContent).toBe('Feb 15, 2023, 07:00 AMEST');
+
+    rerender(
+      formatDate(['2024-09-29T00:00:00.000Z', '2024-12-15T02:00:00.000Z'], {
+        lang: 'zh',
+        showDate: false,
+        showDayOfWeek: true,
+        timeZone: 'America/Los_Angeles',
+      }),
+    );
+    expect(container.textContent).toBe('周六 17:00 - 19:00UTC-7');
   });
 });

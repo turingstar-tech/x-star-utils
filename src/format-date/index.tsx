@@ -96,9 +96,13 @@ const formatDate = (
   }: FormatDateOptions = {},
 ) => {
   const dateRange = (Array.isArray(date) ? date : [date]).map((date) =>
-    dayjs(date)
-      .tz(timeZone)
-      .locale(lang === 'zh' ? 'zh-cn' : 'en'),
+    showDate
+      ? dayjs(date)
+          .tz(timeZone)
+          .locale(lang === 'zh' ? 'zh-cn' : 'en')
+      : dayjs(date)
+          .utcOffset(dayjs().tz(timeZone).utcOffset())
+          .locale(lang === 'zh' ? 'zh-cn' : 'en'),
   );
 
   const isInUS = () =>
