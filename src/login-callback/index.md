@@ -39,7 +39,6 @@ export default () => {
         setContent((content) => `${content}Navigating to:${pathname}`);
         console.log('Navigating to:', pathname);
       },
-      baseUrl: 'https://example.com',
     });
   }, []);
   return <div>{content}</div>;

@@ -2,7 +2,6 @@ interface LoginCallbackProps {
   login: (params_0: { code: string; redirect_uri: string }) => Promise<string>;
   setToken: (token: string) => Promise<void>;
   navigate: (pathname: string) => void;
-  baseUrl: string;
 }
 /**
  * @description 登录回调
@@ -15,7 +14,6 @@ const loginCallback = async ({
   login,
   setToken,
   navigate,
-  baseUrl,
 }: LoginCallbackProps) => {
   const urlParams = new URLSearchParams(window.location.search);
   const code = urlParams.get('code') || '';
@@ -28,7 +26,7 @@ const loginCallback = async ({
   }
   const token = await login({
     code,
-    redirect_uri: `${baseUrl}/login/callback`,
+    redirect_uri: `${location.origin}/login/callback`,
   });
   await setToken(token);
   navigate(originalState.slice(8));

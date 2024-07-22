@@ -15,6 +15,7 @@ Object.defineProperty(window, 'sessionStorage', { value: mockSessionStorage });
 // 模拟 window.location.search
 const mockLocation = {
   search: '?code=test_code&state=abcdefgh/some_path',
+  origin: 'https://example.com',
 };
 Object.defineProperty(global, 'location', {
   value: mockLocation,
@@ -40,7 +41,6 @@ describe('loginCallback function', () => {
       login: loginMock,
       setToken: setTokenMock,
       navigate: navigateMock,
-      baseUrl: 'https://example.com',
     });
 
     expect(navigateMock).toHaveBeenCalledWith('/403');
@@ -49,7 +49,6 @@ describe('loginCallback function', () => {
   });
 
   test('should login, set token, and navigate if state matches', async () => {
-    const baseUrl = 'https://example.com';
     const originalState = 'abcdefgh/some_path';
     window.sessionStorage.setItem('local-state', originalState);
 
@@ -57,12 +56,11 @@ describe('loginCallback function', () => {
       login: loginMock,
       setToken: setTokenMock,
       navigate: navigateMock,
-      baseUrl,
     });
 
     expect(loginMock).toHaveBeenCalledWith({
       code: 'test_code',
-      redirect_uri: `${baseUrl}/login/callback`,
+      redirect_uri: `${location.origin}/login/callback`,
     });
 
     expect(setTokenMock).toHaveBeenCalledWith('mock_token');
@@ -82,7 +80,6 @@ describe('loginCallback function', () => {
       login: loginMock,
       setToken: setTokenMock,
       navigate: navigateMock,
-      baseUrl: 'https://example.com',
     });
 
     expect(navigateMock).toHaveBeenCalledWith('/403');
