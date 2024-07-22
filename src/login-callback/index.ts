@@ -1,9 +1,5 @@
 interface LoginCallbackProps {
-  login: (params_0: {
-    code: string;
-    redirect_uri: string;
-    xmode?: 'notredirect';
-  }) => Promise<string>;
+  login: (params_0: { code: string; redirect_uri: string }) => Promise<string>;
   setToken: (token: string) => Promise<void>;
   navigate: (pathname: string) => void;
   baseUrl: string;

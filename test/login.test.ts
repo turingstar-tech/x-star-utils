@@ -17,17 +17,17 @@ describe('login function test', () => {
   test('should set sessionStorage and perform redirect', () => {
     const mockLocation = {
       replace: jest.fn(),
+      origin: 'https://example.com',
     };
     Object.defineProperty(global, 'location', {
       value: mockLocation,
       writable: true,
     });
     const from = '/somepage';
-    const baseUrl = 'https://example.com';
-    const appID = 'yourAppID';
-    const idAPI = 'https://idapi.example.com';
+    const clientId = 'yourAppID';
+    const loginUrl = 'https://idapi.example.com';
 
-    login({ from, baseUrl, appID, idAPI });
+    login({ from, clientId, loginUrl });
 
     // 测试 sessionStorage 中是否设置了 'local-state'
     expect(sessionStorage.getItem('local-state')).toMatch(/^.{8}\/somepage$/);

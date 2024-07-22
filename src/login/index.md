@@ -17,11 +17,10 @@ import { useEffect } from 'react';
 export default () => {
   const from = '/test';
   useEffect(() => {
-    const baseUrl = 'http://localhost:8001';
-    const appID = 'test123';
-    const idAPI = 'https://example.com';
+    const clientId = 'test123';
+    const loginUrl = 'https://example.com';
 
-    login({ from, baseUrl, appID, idAPI });
+    login({ from, clientId, loginUrl });
   }, [from]);
   return <></>;
 };
