@@ -22,7 +22,6 @@ const loginCallback = async ({
   baseUrl,
 }: LoginCallbackProps) => {
   const urlParams = new URLSearchParams(window.location.search);
-  console.log(urlParams.get('code'));
   const code = urlParams.get('code') || '';
   const state = urlParams.get('state') || '';
   const originalState = sessionStorage.getItem('local-state');
