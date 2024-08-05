@@ -33,8 +33,10 @@ const queryMap = {
  * @returns 是否匹配
  */
 const useResponsive = <T extends string>(query: T | keyof typeof queryMap) => {
-  const getMatches = () =>
-    window.matchMedia((queryMap as any)[query] ?? query).matches;
+  const getMatches = () => {
+    if (typeof window === 'undefined') return false; // 在服务器环境中返回 false
+    return window.matchMedia((queryMap as any)[query] ?? query).matches;
+  };
 
   const [matches, setMatches] = useState(getMatches);
 
