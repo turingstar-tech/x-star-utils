@@ -101,4 +101,18 @@ describe('useResponsive test', () => {
 
     expect(result.current).toBe(true);
   });
+
+  test('should return false when window is undefined', () => {
+    const originalWindow = global.window;
+
+    jest
+      .spyOn(global, 'window', 'get')
+      .mockImplementation(() => undefined as any);
+
+    const { result } = renderHook(() => useResponsive('xs'));
+
+    expect(result.current).toBe(false);
+
+    global.window = originalWindow;
+  });
 });

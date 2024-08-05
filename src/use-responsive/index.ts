@@ -43,8 +43,16 @@ const useResponsive = <T extends string>(query: T | keyof typeof queryMap) => {
   useEffect(() => {
     const handler = () => requestAnimationFrame(() => setMatches(getMatches));
 
-    window.addEventListener('resize', handler);
-    return () => window.removeEventListener('resize', handler);
+    // 检查 window 是否存在
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', handler);
+    }
+
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('resize', handler);
+      }
+    };
   }, []);
 
   return matches;
