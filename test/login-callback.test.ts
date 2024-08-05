@@ -35,7 +35,7 @@ describe('loginCallback function', () => {
   });
 
   test('should navigate to /403 if state does not match', async () => {
-    window.sessionStorage.setItem('local-state', 'wrong_state');
+    window.sessionStorage.setItem('login-state', 'wrong_state');
 
     await loginCallback({
       login: loginMock,
@@ -50,7 +50,7 @@ describe('loginCallback function', () => {
 
   test('should login, set token, and navigate if state matches', async () => {
     const originalState = 'abcdefgh/some_path';
-    window.sessionStorage.setItem('local-state', originalState);
+    window.sessionStorage.setItem('login-state', originalState);
 
     await loginCallback({
       login: loginMock,
@@ -74,7 +74,7 @@ describe('loginCallback function', () => {
       value: mockLocation,
       writable: true,
     });
-    window.sessionStorage.setItem('local-state', 'wrong_state');
+    window.sessionStorage.setItem('login-state', 'wrong_state');
 
     await loginCallback({
       login: loginMock,

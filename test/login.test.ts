@@ -29,17 +29,16 @@ describe('login function test', () => {
 
     login({ from, clientId, loginUrl });
 
-    // 测试 sessionStorage 中是否设置了 'local-state'
-    expect(sessionStorage.getItem('local-state')).toMatch(/^.{8}\/somepage$/);
+    // 测试 sessionStorage 中是否设置了 login-state
+    expect(sessionStorage.getItem('login-state')).toMatch(/^.{8}\/somepage$/);
 
-    // 测试生成的 URLSearchParams 是否符合预期
-    const expectedParams = new URLSearchParams();
+    // 测试生成的 URL 是否符合预期
+    const expectedUrl = new URL('https://idapi.example.com');
+    const expectedParams = expectedUrl.searchParams;
     expectedParams.append('response_type', 'code');
-    expectedParams.append('state', sessionStorage.getItem('local-state') || '');
-    expectedParams.append('redirect_uri', 'https://example.com/login/callback');
     expectedParams.append('client_id', 'yourAppID');
-    const expectedUrl =
-      'https://idapi.example.com?' + expectedParams.toString();
+    expectedParams.append('redirect_uri', 'https://example.com/login/callback');
+    expectedParams.append('state', sessionStorage.getItem('login-state') || '');
     // 测试执行重定向是否符合预期
     expect(location.replace).toHaveBeenCalledWith(expectedUrl);
   });
