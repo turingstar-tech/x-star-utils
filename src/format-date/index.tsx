@@ -115,7 +115,7 @@ const formatDate = (
 
   const formatTimeZone = () => {
     const utcOffset = dateRange[0].utcOffset() / 60;
-    if (lang !== 'zh' && isInUS()) {
+    if (isInUS()) {
       return isDST(dateRange[0], timeZone)
         ? daylightTimeZoneMap[utcOffset]
         : standardTimeZoneMap[utcOffset];

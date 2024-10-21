@@ -131,7 +131,7 @@ describe('formatDate', () => {
         showSecond: true,
       }),
     );
-    expect(container.textContent).toBe('2023/08/15 周二 08:00:00UTC-4');
+    expect(container.textContent).toBe('2023/08/15 周二 08:00:00EDT');
   });
 
   test('should render daylight time zone in New York', () => {
@@ -159,6 +159,6 @@ describe('formatDate', () => {
         timeZone: 'America/Los_Angeles',
       }),
     );
-    expect(container.textContent).toBe('周六 17:00 - 19:00UTC-7');
+    expect(container.textContent).toBe('周六 17:00 - 19:00PDT');
   });
 });
