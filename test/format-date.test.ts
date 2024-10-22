@@ -161,4 +161,14 @@ describe('formatDate', () => {
     );
     expect(container.textContent).toBe('周六 17:00 - 18:00PDT');
   });
+
+  test('should render daylight time zone in other time zone', () => {
+    const { container } = render(
+      formatDate('2023-08-15T12:00:00Z', {
+        timeZone: 'America/Sao_Paulo',
+        lang: 'en',
+      }),
+    );
+    expect(container.textContent).toBe('Aug 15, 2023, 09:00 AMUTC-3');
+  });
 });
