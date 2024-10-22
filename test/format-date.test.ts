@@ -125,13 +125,13 @@ describe('formatDate', () => {
   test('should show Chinese formatting and UTC offset', () => {
     const { container } = render(
       formatDate(mockDate, {
-        timeZone: 'America/New_York',
+        timeZone: 'America/Sao_Paulo',
         separator: '/',
         showDayOfWeek: true,
         showSecond: true,
       }),
     );
-    expect(container.textContent).toBe('2023/08/15 周二 08:00:00UTC-4');
+    expect(container.textContent).toBe('2023/08/15 周二 09:00:00UTC-3');
   });
 
   test('should render daylight time zone in New York', () => {
@@ -159,6 +159,6 @@ describe('formatDate', () => {
         timeZone: 'America/Los_Angeles',
       }),
     );
-    expect(container.textContent).toBe('周六 17:00 - 18:00UTC-7');
+    expect(container.textContent).toBe('周六 17:00 - 18:00PDT');
   });
 });
