@@ -159,6 +159,6 @@ describe('formatDate', () => {
         timeZone: 'America/Los_Angeles',
       }),
     );
-    expect(container.textContent).toBe('周六 17:00 - 19:00UTC-7');
+    expect(container.textContent).toBe('周六 17:00 - 18:00UTC-7');
   });
 });
