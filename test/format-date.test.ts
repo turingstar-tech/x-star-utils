@@ -46,6 +46,15 @@ describe('formatDate', () => {
     expect(container.textContent).toBe(
       'Tue, 08:00:00 PM - Fri, 10:00:00 PMUTC+8',
     );
+
+    rerender(
+      formatDate([mockDate, '2023-08-16T14:00:00Z'], {
+        lang: 'en',
+        showDayOfWeek: true,
+        isWeekDay: true,
+      }),
+    );
+    expect(container.textContent).toBe('weekday,  08:00 PM - 10:00 PMUTC+8');
   });
 
   test('should render without date', () => {
