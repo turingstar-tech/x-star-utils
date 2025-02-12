@@ -98,6 +98,18 @@ export default () => {
           lang,
           showDate: false,
           showDayOfWeek: true,
+          isWeekDay: true,
+        })}
+      </div>
+      <div>
+        {formatDate([1713922083000, 1714008483000], {
+          timeZone: 'America/New_York',
+          lang,
+          separator: '-',
+          durationIndicator: '~',
+          showDayOfWeek: true,
+          showDate: false,
+          isWeekDay: true,
         })}
       </div>
     </>
@@ -143,5 +155,10 @@ interface FormatDateOptions {
    * 是否显示秒
    */
   showSecond?: boolean;
+
+  /**
+   * 是否替换星期几为 `工作日`
+   */
+  isWeekDay?: boolean;
 }
 ```

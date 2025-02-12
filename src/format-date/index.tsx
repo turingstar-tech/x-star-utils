@@ -68,6 +68,11 @@ export interface FormatDateOptions {
   showDayOfWeek?: boolean;
 
   /**
+   * 是否替换星期几为 `工作日`
+   */
+  isWeekDay?: boolean;
+
+  /**
    * 是否显示秒
    */
   showSecond?: boolean;
@@ -93,6 +98,7 @@ const formatDate = (
     showDate = true,
     showDayOfWeek = false,
     showSecond = false,
+    isWeekDay = false,
   }: FormatDateOptions = {},
 ) => {
   const dateRange = (Array.isArray(date) ? date : [date]).map((date) =>
@@ -121,12 +127,18 @@ const formatDate = (
   };
 
   const formatDateTemplate = {
-    zh: showDate
+    zh: isWeekDay
+      ? '[ 工作日]'
+      : showDate
       ? `${separator ? `YYYY${separator}MM${separator}DD` : 'YYYY年MM月DD日'}${
           showDayOfWeek ? ' ddd' : ''
         }`
       : 'ddd',
-    en: showDate ? `${showDayOfWeek ? 'ddd, ' : ''}MMM DD, YYYY,` : 'ddd,',
+    en: isWeekDay
+      ? '[weekday, ]'
+      : showDate
+      ? `${showDayOfWeek ? 'ddd, ' : ''}MMM DD, YYYY,`
+      : 'ddd,',
   }[lang];
 
   const formatTimeTemplate = {
