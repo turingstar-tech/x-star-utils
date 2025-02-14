@@ -54,7 +54,7 @@ describe('formatDate', () => {
         isWeekDay: true,
       }),
     );
-    expect(container.textContent).toBe('weekday,  08:00 PM - 10:00 PMUTC+8');
+    expect(container.textContent).toBe('Weekday,  08:00 PM - 10:00 PMUTC+8');
   });
 
   test('should render without date', () => {

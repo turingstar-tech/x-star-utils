@@ -135,7 +135,7 @@ const formatDate = (
         }`
       : 'ddd',
     en: isWeekDay
-      ? '[weekday, ]'
+      ? '[Weekday, ]'
       : showDate
       ? `${showDayOfWeek ? 'ddd, ' : ''}MMM DD, YYYY,`
       : 'ddd,',
