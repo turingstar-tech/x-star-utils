@@ -48,6 +48,16 @@ export interface AWSMultipartUploadOptions {
 }
 
 /**
+ * 将Blob片段转换为Uint8Array以避免流处理错误
+ * @param blob 文件片段
+ * @returns Uint8Array格式的文件内容
+ */
+const blobToUint8Array = async (blob: Blob): Promise<Uint8Array> => {
+  const arrayBuffer = await blob.arrayBuffer();
+  return new Uint8Array(arrayBuffer);
+};
+
+/**
  * AWS 分片上传文件并返回进度
  *
  * @param options 上传选项
@@ -63,7 +73,11 @@ const awsMultipartUpload = async ({
   onProgress,
 }: AWSMultipartUploadOptions) => {
   let uploadId;
-  const s3Client = new S3Client(clientConfig);
+  const s3Client = new S3Client({
+    ...clientConfig,
+    // 添加配置禁用校验和计算，解决 readableStream.getReader is not a function 错误
+    requestChecksumCalculation: 'WHEN_REQUIRED',
+  });
   try {
     const multipartUpload = await s3Client.send(
       new CreateMultipartUploadCommand({
@@ -83,6 +97,11 @@ const awsMultipartUpload = async ({
     for (let i = 0; i < partNumber; i++) {
       const start = i * size;
       const end = Math.min(file.size, start + size);
+      const fileSlice = file.slice(start, end);
+
+      // 将文件片段转换为Uint8Array以避免流处理错误
+      const fileContent = await blobToUint8Array(fileSlice);
+
       uploadPromises.push(
         s3Client
           .send(
@@ -90,7 +109,7 @@ const awsMultipartUpload = async ({
               Bucket: bucket,
               Key: key,
               UploadId: uploadId,
-              Body: file.slice(start, end),
+              Body: fileContent,
               PartNumber: i + 1,
             }),
           )
