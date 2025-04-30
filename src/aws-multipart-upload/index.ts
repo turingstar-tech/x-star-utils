@@ -120,6 +120,7 @@ const awsMultipartUpload = async ({
     return res;
   } catch (error) {
     // 出现错误终止上传
+    console.error(error);
     if (uploadId) {
       await s3Client.send(
         new AbortMultipartUploadCommand({
