@@ -205,5 +205,27 @@ describe('formatDate', () => {
       }),
     );
     expect(container.textContent).toBe('Aug 15, 2023, 05:00 AMMST');
+
+    // 跨天且跨令时：起止各自展示日期与角标
+    rerender(
+      formatDate(['2024-09-29T00:00:00.000Z', '2024-12-15T02:00:00.000Z'], {
+        lang: 'zh',
+        timeZone: 'America/Los_Angeles',
+      }),
+    );
+    expect(container.textContent).toBe(
+      '2024年09月28日 17:00PDT - 2024年12月14日 18:00PST',
+    );
+
+    // 不显示日期/星期，但跨天且跨令时（星期不同）
+    // 2024-11-03 美国结束夏令时：11-02 PDT → 11-04 PST
+    rerender(
+      formatDate(['2024-11-02T17:00:00.000Z', '2024-11-04T18:00:00.000Z'], {
+        lang: 'zh',
+        showDate: false,
+        timeZone: 'America/Los_Angeles',
+      }),
+    );
+    expect(container.textContent).toBe('10:00PDT - 10:00PST (+2 天)');
   });
 });

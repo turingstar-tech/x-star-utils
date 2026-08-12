@@ -18,25 +18,20 @@ describe('aws multipart upload test', () => {
         secretAccessKey: 'fakeSecretAccessKey',
         sessionToken: 'fakeSessionToken',
       },
-      bucketName: 'test-bucket',
+      bucket: 'test-bucket',
       key: 'test-file.txt',
       file: mockFile,
       onProgress: jest.fn(),
     };
     const mockUploadId = 'mockUploadId';
     const mockETag = 'mockETag';
-    // 模拟 AWS S3 CreateCommand 响应
+    // CreateMultipartUpload
     mockS3Client.send.mockResolvedValueOnce({
       UploadId: mockUploadId,
     });
-    // 模拟 AWS S3 UploadPartCommand 响应
+    // UploadPart（两段）+ CompleteMultipartUpload
     mockS3Client.send.mockResolvedValue({ ETag: mockETag });
 
-    // 模拟 AWS S3 CompleteMultipartUploadCommand 响应
-    mockS3Client.send.mockResolvedValueOnce({
-      Key: 'test-file.txt',
-      Bucket: 'test-bucket',
-    });
     const result = await awsMultipartUpload(mockParams);
     expect(result).toEqual({
       ETag: mockETag,
@@ -58,24 +53,113 @@ describe('aws multipart upload test', () => {
         secretAccessKey: 'fakeSecretAccessKey',
         sessionToken: 'fakeSessionToken',
       },
-      bucketName: 'test-bucket',
+      bucket: 'test-bucket',
       key: 'test-file.txt',
       file: mockFile,
       onProgress: jest.fn(),
     };
-    let mockUploadId = 'mockUploadId';
-    // 模拟 AWS S3 CreateCommand 响应
-    mockS3Client.send.mockResolvedValueOnce({
-      UploadId: mockUploadId,
-    });
-    // 模拟抛出错误
-    mockS3Client.send.mockRejectedValueOnce(new Error('Simulated failure'));
+
+    // Create 成功 -> UploadPart 失败 -> Abort
+    mockS3Client.send
+      .mockResolvedValueOnce({ UploadId: 'mockUploadId' })
+      .mockRejectedValueOnce(new Error('Simulated failure'))
+      .mockResolvedValueOnce({});
 
     expect(await awsMultipartUpload(mockParams)).toBeUndefined();
     expect(mockS3Client.send).toHaveBeenCalledTimes(3);
-    // 模拟 uploadId 为空的情况
-    mockUploadId = '';
+
+    // Create 即失败（无 uploadId，不走 Abort）
+    mockS3Client.send.mockRejectedValueOnce(new Error('Simulated failure'));
     expect(await awsMultipartUpload(mockParams)).toBeUndefined();
     expect(mockS3Client.send).toHaveBeenCalledTimes(4);
+  });
+
+  test('uses blob.arrayBuffer when available', async () => {
+    const mockS3Client = {
+      send: jest.fn<() => Promise<any>>(),
+    };
+    (S3Client as any).mockImplementation(() => mockS3Client);
+    mockS3Client.send.mockResolvedValue({ ETag: 'etag', UploadId: 'id' });
+
+    const arrayBufferMock = jest.fn(
+      async () => Uint8Array.from([104, 101, 108, 108, 111]).buffer,
+    );
+    const descriptor = Object.getOwnPropertyDescriptor(
+      Blob.prototype,
+      'arrayBuffer',
+    );
+    Object.defineProperty(Blob.prototype, 'arrayBuffer', {
+      configurable: true,
+      writable: true,
+      value: arrayBufferMock,
+    });
+
+    try {
+      const result = await awsMultipartUpload({
+        clientConfig: { region: 'us-east-1' },
+        bucket: 'test-bucket',
+        key: 'test-file.txt',
+        file: new Blob(['hello']),
+      });
+      expect(arrayBufferMock).toHaveBeenCalled();
+      expect(result).toEqual({ ETag: 'etag', UploadId: 'id' });
+    } finally {
+      if (descriptor) {
+        Object.defineProperty(Blob.prototype, 'arrayBuffer', descriptor);
+      } else {
+        delete (
+          Blob.prototype as { arrayBuffer?: typeof Blob.prototype.arrayBuffer }
+        ).arrayBuffer;
+      }
+    }
+  });
+
+  test('rejects when FileReader fails', async () => {
+    const mockS3Client = {
+      send: jest.fn<() => Promise<any>>(),
+    };
+    (S3Client as any).mockImplementation(() => mockS3Client);
+    mockS3Client.send
+      .mockResolvedValueOnce({ UploadId: 'id' })
+      .mockResolvedValueOnce({});
+
+    const descriptor = Object.getOwnPropertyDescriptor(
+      Blob.prototype,
+      'arrayBuffer',
+    );
+    // 确保走 FileReader 分支
+    delete (
+      Blob.prototype as { arrayBuffer?: typeof Blob.prototype.arrayBuffer }
+    ).arrayBuffer;
+
+    const OriginalFileReader = global.FileReader;
+    class MockFileReader {
+      onload: ((ev: ProgressEvent<FileReader>) => void) | null = null;
+      onerror: ((ev: ProgressEvent<FileReader>) => void) | null = null;
+      result: ArrayBuffer | null = null;
+      error: DOMException | null = null;
+      readAsArrayBuffer() {
+        this.error = new DOMException('read failed');
+        this.onerror?.({} as ProgressEvent<FileReader>);
+      }
+    }
+    global.FileReader = MockFileReader as unknown as typeof FileReader;
+
+    try {
+      expect(
+        await awsMultipartUpload({
+          clientConfig: { region: 'us-east-1' },
+          bucket: 'test-bucket',
+          key: 'test-file.txt',
+          file: new Blob(['hello']),
+        }),
+      ).toBeUndefined();
+      expect(mockS3Client.send).toHaveBeenCalledTimes(2);
+    } finally {
+      global.FileReader = OriginalFileReader;
+      if (descriptor) {
+        Object.defineProperty(Blob.prototype, 'arrayBuffer', descriptor);
+      }
+    }
   });
 });

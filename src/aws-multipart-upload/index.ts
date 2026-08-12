@@ -53,8 +53,17 @@ export interface AWSMultipartUploadOptions {
  * @returns Uint8Array格式的文件内容
  */
 const blobToUint8Array = async (blob: Blob): Promise<Uint8Array> => {
-  const arrayBuffer = await blob.arrayBuffer();
-  return new Uint8Array(arrayBuffer);
+  if (typeof blob.arrayBuffer === 'function') {
+    return new Uint8Array(await blob.arrayBuffer());
+  }
+
+  // 兼容 jsdom 等缺少 Blob.arrayBuffer 的环境
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(new Uint8Array(reader.result as ArrayBuffer));
+    reader.onerror = () => reject(reader.error);
+    reader.readAsArrayBuffer(blob);
+  });
 };
 
 /**
