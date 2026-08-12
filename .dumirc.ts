@@ -4,6 +4,8 @@ export default defineConfig({
   base: '/x-star-utils/',
   publicPath: '/x-star-utils/',
   outputPath: 'docs-dist',
+  // AWS SDK 等依赖含 async generator，esbuild 默认 target 无法压缩
+  jsMinifier: 'terser',
   themeConfig: {
     name: 'x-star-utils',
     footer:
