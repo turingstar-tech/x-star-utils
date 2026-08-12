@@ -168,6 +168,42 @@ describe('formatDate', () => {
         timeZone: 'America/Los_Angeles',
       }),
     );
-    expect(container.textContent).toBe('周六 17:00 - 18:00PDT');
+    // 跨夏令时 / 冬令时：起止时间各自展示对应角标
+    expect(container.textContent).toBe('周六 17:00PDT - 18:00PST');
+
+    rerender(
+      formatDate(['2024-07-01T16:00:00.000Z', '2024-07-01T20:00:00.000Z'], {
+        lang: 'zh',
+        showDate: false,
+        timeZone: 'America/New_York',
+      }),
+    );
+    // 未跨令时：仍只在末尾展示一个角标
+    expect(container.textContent).toBe('12:00 - 16:00EDT');
+
+    rerender(
+      formatDate('2023-08-15T12:00:00Z', {
+        timeZone: 'America/Detroit',
+        lang: 'en',
+      }),
+    );
+    expect(container.textContent).toBe('Aug 15, 2023, 08:00 AMEDT');
+
+    rerender(
+      formatDate('2023-02-15T12:00:00Z', {
+        timeZone: 'America/Phoenix',
+        lang: 'en',
+      }),
+    );
+    expect(container.textContent).toBe('Feb 15, 2023, 05:00 AMMST');
+
+    // Phoenix 特殊规则：夏季也固定 MST，不走夏令时逻辑
+    rerender(
+      formatDate('2023-08-15T12:00:00Z', {
+        timeZone: 'America/Phoenix',
+        lang: 'en',
+      }),
+    );
+    expect(container.textContent).toBe('Aug 15, 2023, 05:00 AMMST');
   });
 });

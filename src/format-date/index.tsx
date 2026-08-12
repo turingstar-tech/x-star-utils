@@ -36,6 +36,44 @@ const daylightTimeZoneMap: Record<number, string> = {
   [DaylightTimeZone.EasternDaylightTime]: 'EDT',
 };
 
+/**
+ * 特殊时区规则：不参与夏令时/冬令时切换，固定使用指定缩写
+ */
+const SPECIAL_TIME_ZONE_RULES: Record<string, string> = {
+  'America/Phoenix': 'MST', // 亚利桑那大部分地区无夏令时
+};
+
+/**
+ * 美国本土使用 PST/PDT、MST/MDT、CST/CDT、EST/EDT 缩写的 IANA 时区
+ * （不含 Alaska / Hawaii，其缩写不在上述映射中；特殊规则时区见 SPECIAL_TIME_ZONE_RULES）
+ */
+const US_TIME_ZONES = [
+  // Pacific
+  'America/Los_Angeles',
+  // Mountain
+  'America/Denver',
+  'America/Boise',
+  // Central
+  'America/Chicago',
+  'America/Indiana/Knox',
+  'America/Indiana/Tell_City',
+  'America/Menominee',
+  'America/North_Dakota/Beulah',
+  'America/North_Dakota/Center',
+  'America/North_Dakota/New_Salem',
+  // Eastern
+  'America/New_York',
+  'America/Detroit',
+  'America/Indiana/Indianapolis',
+  'America/Indiana/Marengo',
+  'America/Indiana/Petersburg',
+  'America/Indiana/Vevay',
+  'America/Indiana/Vincennes',
+  'America/Indiana/Winamac',
+  'America/Kentucky/Louisville',
+  'America/Kentucky/Monticello',
+];
+
 export interface FormatDateOptions {
   /**
    * 时区
@@ -107,24 +145,27 @@ const formatDate = (
       .locale(lang === 'zh' ? 'zh-cn' : 'en'),
   );
 
-  const isInUS = () =>
-    [
-      'America/Los_Angeles',
-      'America/Denver',
-      'America/Chicago',
-      'America/New_York',
-    ].includes(timeZone);
+  const isInUS = () => US_TIME_ZONES.includes(timeZone);
 
-  const formatTimeZone = () => {
-    const utcOffset = dateRange[0].utcOffset() / 60;
+  const formatTimeZone = (baseDate: dayjs.Dayjs) => {
+    const specialTz = SPECIAL_TIME_ZONE_RULES[timeZone];
+    if (specialTz) {
+      return specialTz;
+    }
+
+    const utcOffset = baseDate.utcOffset() / 60;
     if (isInUS()) {
-      return isDST(dateRange[0], timeZone)
+      return isDST(baseDate, timeZone)
         ? daylightTimeZoneMap[utcOffset]
         : standardTimeZoneMap[utcOffset];
     } else {
       return `UTC${utcOffset >= 0 ? '+' : ''}${utcOffset}`;
     }
   };
+
+  const renderTimeZoneSup = (tz: string) => (
+    <sup style={{ fontSize: 10 }}>{tz}</sup>
+  );
 
   const formatDateTemplate = {
     zh: isWeekDay
@@ -151,7 +192,14 @@ const formatDate = (
       // 只有一个时间，不存在时间范围
       const baseDate = dateRange[0].format(formatDateTemplate);
       const baseTime = dateRange[0].format(formatTimeTemplate);
-      return showDate || showDayOfWeek ? `${baseDate} ${baseTime}` : baseTime;
+      const content =
+        showDate || showDayOfWeek ? `${baseDate} ${baseTime}` : baseTime;
+      return (
+        <>
+          <span>{content}</span>
+          {renderTimeZoneSup(formatTimeZone(dateRange[0]))}
+        </>
+      );
     } else {
       const [before, after] = dateRange[0].isBefore(dateRange[1])
         ? [dateRange[0], dateRange[1]]
@@ -160,31 +208,96 @@ const formatDate = (
       const startTime = before.format(formatTimeTemplate);
       const endDate = after.format(formatDateTemplate);
       const endTime = after.format(formatTimeTemplate);
+      const startTz = formatTimeZone(before);
+      const endTz = formatTimeZone(after);
+      const crossTimeZone = startTz !== endTz;
+
       if (startDate === endDate) {
         // 在同一天
-        return showDate || showDayOfWeek
-          ? `${startDate} ${startTime} ${durationIndicator} ${endTime}`
-          : `${startTime} ${durationIndicator} ${endTime}`;
+        const prefix = showDate || showDayOfWeek ? `${startDate} ` : '';
+        if (crossTimeZone) {
+          return (
+            <>
+              <span>
+                {prefix}
+                {startTime}
+              </span>
+              {renderTimeZoneSup(startTz)}
+              <span>
+                {' '}
+                {durationIndicator} {endTime}
+              </span>
+              {renderTimeZoneSup(endTz)}
+            </>
+          );
+        }
+        return (
+          <>
+            <span>
+              {prefix}
+              {startTime} {durationIndicator} {endTime}
+            </span>
+            {renderTimeZoneSup(startTz)}
+          </>
+        );
       } else {
         // 不在同一天
         const daysDiff = after
           .startOf('day')
           .diff(before.startOf('day'), 'day');
-        return showDate || showDayOfWeek
-          ? `${startDate} ${startTime} ${durationIndicator} ${endDate} ${endTime}`
-          : `${startTime} ${durationIndicator} ${endTime} (+${daysDiff} ${
-              lang === 'zh' ? '天' : daysDiff > 1 ? 'days' : 'day'
-            })`;
+        if (showDate || showDayOfWeek) {
+          if (crossTimeZone) {
+            return (
+              <>
+                <span>
+                  {startDate} {startTime}
+                </span>
+                {renderTimeZoneSup(startTz)}
+                <span>
+                  {' '}
+                  {durationIndicator} {endDate} {endTime}
+                </span>
+                {renderTimeZoneSup(endTz)}
+              </>
+            );
+          }
+          return (
+            <>
+              <span>
+                {startDate} {startTime} {durationIndicator} {endDate} {endTime}
+              </span>
+              {renderTimeZoneSup(startTz)}
+            </>
+          );
+        }
+        if (crossTimeZone) {
+          return (
+            <>
+              <span>{startTime}</span>
+              {renderTimeZoneSup(startTz)}
+              <span>
+                {' '}
+                {durationIndicator} {endTime} (+{daysDiff}{' '}
+                {lang === 'zh' ? '天' : daysDiff > 1 ? 'days' : 'day'})
+              </span>
+              {renderTimeZoneSup(endTz)}
+            </>
+          );
+        }
+        return (
+          <>
+            <span>
+              {startTime} {durationIndicator} {endTime} (+{daysDiff}{' '}
+              {lang === 'zh' ? '天' : daysDiff > 1 ? 'days' : 'day'})
+            </span>
+            {renderTimeZoneSup(startTz)}
+          </>
+        );
       }
     }
   };
 
-  return (
-    <>
-      <span>{formatDateTime()}</span>
-      <sup style={{ fontSize: 10 }}>{formatTimeZone()}</sup>
-    </>
-  );
+  return formatDateTime();
 };
 
 export default formatDate;
