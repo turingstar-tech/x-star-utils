@@ -270,6 +270,9 @@ const formatDate = (
             </>
           );
         }
+        const daysSuffix = ` (+${daysDiff} ${
+          lang === 'zh' ? '天' : daysDiff > 1 ? 'days' : 'day'
+        })`;
         if (crossTimeZone) {
           return (
             <>
@@ -277,18 +280,18 @@ const formatDate = (
               {renderTimeZoneSup(startTz)}
               <span>
                 {' '}
-                {durationIndicator} {endTime} (+{daysDiff}{' '}
-                {lang === 'zh' ? '天' : daysDiff > 1 ? 'days' : 'day'})
+                {durationIndicator} {endTime}
               </span>
               {renderTimeZoneSup(endTz)}
+              <span>{daysSuffix}</span>
             </>
           );
         }
         return (
           <>
             <span>
-              {startTime} {durationIndicator} {endTime} (+{daysDiff}{' '}
-              {lang === 'zh' ? '天' : daysDiff > 1 ? 'days' : 'day'})
+              {startTime} {durationIndicator} {endTime}
+              {daysSuffix}
             </span>
             {renderTimeZoneSup(startTz)}
           </>
